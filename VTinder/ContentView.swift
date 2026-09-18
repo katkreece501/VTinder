@@ -7,15 +7,9 @@
 
 import SwiftUI
 
-struct ProfileInfo {
+struct Profile {
     let name:String
     let year:String
-    let major:String
-    var interests:Set<String> = Set<String>()
-    let next_steps:String
-    let age:Int
-    let height:Int
-    let gender:String
 }
 
 struct ContentView: View {
