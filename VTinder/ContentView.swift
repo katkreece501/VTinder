@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-struct Profile {
-    let name:String
-    let year:String
-}
-
 struct ContentView: View {
     var body: some View {
         VStack {
