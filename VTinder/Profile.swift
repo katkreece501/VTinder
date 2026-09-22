@@ -7,22 +7,24 @@
 
 import SwiftUI
 import SwiftData
+import UIKit
 
 @Model
 class Profile {
     var name:String
-    var year:SchoolYear
+    var year:String
     var bio:String
-    var major:Major
-    var interests:Set<String> = Set<String>()
-    var gradDate:GradDate
-    var nextSteps:NextSteps
+    var major:String
+    var interests:String
+    var gradDate:String
+    var nextSteps:String
     var age:Int
     var heightFeet:Int
     var heightInches:Int
-    var gender:Gender
+    var gender:String
+    var imageData: Data?
     
-    init(name: String, year: SchoolYear, bio: String, major: Major, interests: Set<String>, gradDate: GradDate, nextSteps: NextSteps, age: Int, heightFeet: Int, heightInches: Int, gender: Gender) {
+    init(name: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightFeet: Int, heightInches: Int, gender: String, imageData: Data) {
         self.name = name
         self.year = year
         self.bio = bio
@@ -34,5 +36,12 @@ class Profile {
         self.heightFeet = heightFeet
         self.heightInches = heightInches
         self.gender = gender
+        self.imageData = imageData
+    }
+    
+    var profileImage: UIImage? {
+        imageData.flatMap {
+            UIImage(data: $0)
+        }
     }
 }
