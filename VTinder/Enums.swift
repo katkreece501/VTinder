@@ -1,10 +1,10 @@
 //
-//  Enums.swift
-//  VTinder
+//  Various enums used for profile options.
 //
 //  Created by Kathleen Reece on 9/22/26.
 //
 
+// The possible school year options users can choose from
 enum SchoolYear:String, CaseIterable, Identifiable {
     case freshman = "Freshman"
     case sophomore = "Sophomore"
@@ -17,6 +17,7 @@ enum SchoolYear:String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+// The possible genders users can choose from
 enum Gender:String, CaseIterable, Identifiable {
     case female = "Female"
     case male = "Male"
@@ -25,6 +26,7 @@ enum Gender:String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+// The possble "next steps" (what the user wants to do after college)
 enum NextSteps:String, CaseIterable, Identifiable {
     case working = "Working"
     case military = "Military"
@@ -36,6 +38,7 @@ enum NextSteps:String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+// The possible graduation dates
 enum GradDate:String, CaseIterable, Identifiable {
     case fall26 = "Fall 2026"
     case spring27 = "Spring 2027"
@@ -52,6 +55,8 @@ enum GradDate:String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+// The possible majors.
+// NOTE: This is not all possible majors at VT; these majors all had over 100 students sometime in since the 2023-2024 school year (infor from University Data Commons). Some majors have been combined (ie., two Accounting majors have been combined into just Accounting).
 enum Major:String, CaseIterable, Identifiable {
     case accounting = "Accounting"
     case advertising = "Advertising"
