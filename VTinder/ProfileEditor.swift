@@ -14,16 +14,16 @@ struct ProfileEditor: View {
     let profile: Profile?
     private var editorTitle: String {profile == nil ? "Create Profile" : "Edit Profile"}
     @State private var name = ""
-    @State private var selectedYear = SchoolYear.freshman.rawValue
+    @State private var selectedYear = SchoolYear.freshman
     @State private var bio = ""
-    @State private var selectedMajor = Major.accounting.rawValue
+    @State private var selectedMajor = Major.accounting
     @State private var interests = ""
-    @State private var selectedGradDate = GradDate.fall26.rawValue
-    @State private var selectedNextSteps = NextSteps.gradSchool.rawValue
+    @State private var selectedGradDate = GradDate.fall26
+    @State private var selectedNextSteps = NextSteps.gradSchool
     @State private var age: Int?
     @State private var heightFeet: Int?
     @State private var heightInches: Int?
-    @State private var selectedGender = Gender.female.rawValue
+    @State private var selectedGender = Gender.female
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var selectedImage: Image?
 
