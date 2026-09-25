@@ -37,14 +37,28 @@ class Profile {
         self.gender = gender
         self.imageData = imageData
     }
-    // Convert image data into the actual image
-    /*
-    var profileImage: UIImage? {
-        imageData.flatMap {
-            UIImage(data: $0)
-        }
+    
+    func stringToEnumYear() -> SchoolYear {
+        return SchoolYear(rawValue: self.year)!
     }
-     */
+    
+    func stringToEnumMajor() -> Major {
+        return Major(rawValue: self.major)!
+    }
+    
+    func stringToEnumGradDate() -> GradDate {
+        return GradDate(rawValue: self.gradDate)!
+    }
+    
+    func stringToEnumNextSteps() -> NextSteps {
+        return NextSteps(rawValue: self.nextSteps)!
+    }
+    
+    func stringToEnumGender() -> Gender {
+        return Gender(rawValue: self.gender)!
+    }
+    
+    
 }
 
 extension Profile {
