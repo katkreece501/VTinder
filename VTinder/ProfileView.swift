@@ -28,7 +28,7 @@ struct ProfileView: View {
                 Text("Graduation Date: \(profile.gradDate)").font(.title3)
                 Text("Next Steps: \(profile.nextSteps)").font(.title3)
                 Text("Age: \(profile.age)").font(.title3)
-                Text("Height: \(profile.heightFeet) ft \(profile.heightInches) in")
+                Text("Height: \(profile.heightFeet) ft \(profile.heightInches) in").font(.title3)
                 Text("Gender: \(profile.gender)").font(.title3)
                     }
                     .padding()
