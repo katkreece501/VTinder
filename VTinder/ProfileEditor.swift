@@ -12,8 +12,8 @@ import PhotosUI
 
 struct ProfileEditor: View {
     let profile: Profile?
+    let name: String
     private var editorTitle: String {profile == nil ? "Create Profile" : "Edit Profile"}
-    @State private var name: String
     @State private var selectedYear: SchoolYear
     @State private var bio: String
     @State private var selectedMajor: Major
@@ -27,9 +27,9 @@ struct ProfileEditor: View {
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var selectedImageData: Data?
     
-    init(profile: Profile?) {
+    init(profile: Profile?, name: String) {
         self.profile = profile
-        _name = State(initialValue: profile?.name ?? "")
+        self.name = name
         _selectedYear = State(initialValue: profile?.stringToEnumYear() ?? .freshman)
         _bio = State(initialValue: profile?.bio ?? "")
         _selectedMajor = State(initialValue: profile?.stringToEnumMajor() ?? .accounting)
@@ -46,7 +46,6 @@ struct ProfileEditor: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Name", text: $name)
                 Picker("School Year", selection: $selectedYear) {
                     ForEach(SchoolYear.allCases) { year in Text(year.rawValue) }
                 }
@@ -84,8 +83,4 @@ struct ProfileEditor: View {
             .navigationTitle(editorTitle)
         }
     }
-}
-
-#Preview {
-    ProfileEditor(profile: Profile.sample1)
 }

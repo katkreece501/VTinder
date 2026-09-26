@@ -9,34 +9,50 @@ import SwiftUI
 import SwiftData
 
 struct ProfileView: View {
-    let profile: Profile
+    let user: User
+    let currUserID: UUID
+    
+    var isCurrUserProfile: Bool {
+        user.userID == currUserID
+    }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                        Text("\(profile.name), \(profile.year)").font(.title).bold()
-                        if let data = profile.imageData, let uiImage = UIImage(data: data) {
+                Text("\(user.profile!.name), \(user.profile!.year)").font(.title).bold()
+                if let data = user.profile!.imageData, let uiImage = UIImage(data: data) {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFit()
                         } else {
                             Image(systemName: "person.circle") // Fallback placeholder
                         }
-                Text("About Me: \(profile.bio)").font(.title3)
-                Text("Major: \(profile.major)").font(.title3)
-                Text("Interests: \(profile.interests)").font(.title3)
-                Text("Graduation Date: \(profile.gradDate)").font(.title3)
-                Text("Next Steps: \(profile.nextSteps)").font(.title3)
-                Text("Age: \(profile.age)").font(.title3)
-                Text("Height: \(profile.heightFeet) ft \(profile.heightInches) in").font(.title3)
-                Text("Gender: \(profile.gender)").font(.title3)
+                Text("About Me: \(user.profile!.bio)").font(.title3)
+                Text("Major: \(user.profile!.major)").font(.title3)
+                Text("Interests: \(user.profile!.interests)").font(.title3)
+                Text("Graduation Date: \(user.profile!.gradDate)").font(.title3)
+                Text("Next Steps: \(user.profile!.nextSteps)").font(.title3)
+                Text("Age: \(user.profile!.age)").font(.title3)
+                Text("Height: \(user.profile!.heightFeet) ft \(user.profile!.heightInches) in").font(.title3)
+                Text("Gender: \(user.profile!.gender)").font(.title3)
                     }
                     .padding()
-                }
-                .navigationTitle("Profile")
+                    .toolbar {
+                                if isCurrUserProfile {
+                                    ToolbarItem(placement: .topBarTrailing) {
+                                        Button("Edit") {
+                                            ProfileEditor(profile: user.profile, name: user.name)
+                                        }
+                                    }
+                                } else {
+                                    // TBD
+                                }
+                            }
+            }
+            .navigationTitle("Profile")
     }
 }
 
 #Preview {
-    ProfileView(profile: .sample1)
+    //ProfileView(profile: .sample1)
 }
