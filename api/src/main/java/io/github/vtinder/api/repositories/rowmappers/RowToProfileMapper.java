@@ -12,16 +12,16 @@ public class RowToProfileMapper implements RowMapper<Profile> {
     @Override
     public Profile map(ResultSet rs, StatementContext ctx) throws SQLException {
         return new Profile(
-                rs.getInt("id"),
+                rs.getString("user_uuid"),
                 rs.getString("name"),
-                rs.getString("year"),
+                rs.getString("school_year"),
                 rs.getString("bio"),
                 rs.getString("major"),
                 rs.getString("interests"),
-                rs.getString("gradDate"),
-                rs.getString("nextSteps"),
+                rs.getString("grad_date"),
+                rs.getString("next_steps"),
                 rs.getInt("age"),
-                rs.getInt("heightInches"),
+                rs.getInt("height_inches"),
                 rs.getString("gender"),
                 rs.getBytes("image")
         );

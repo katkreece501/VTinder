@@ -1,26 +1,29 @@
 package io.github.vtinder.api.config;
 
 import io.github.vtinder.api.repositories.rowmappers.RowToProfileMapper;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.HandleListener;
+import org.jdbi.v3.core.Handles;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.locator.ClasspathSqlLocator;
+import org.jdbi.v3.core.statement.Batch;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.sqlite.SQLiteDataSource;
 
 import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
 
 @Configuration
 class RepositoryConfig {
 
-    private final String DB_URL = "vtinder.db";
-
     @Bean
     public DataSource dataSource() {
         SQLiteDataSource dataSource = new SQLiteDataSource();
-        dataSource.setUrl("jdbc:sqlite:" + DB_URL);
+        dataSource.setUrl("jdbc:sqlite:vtinder.db");
         return dataSource;
     }
 
@@ -28,16 +31,44 @@ class RepositoryConfig {
     public Jdbi jdbi(DataSource dataSource) {
         Jdbi jdbi = Jdbi.create(dataSource);
         jdbi.registerRowMapper(new RowToProfileMapper());
+        jdbi.getConfig(Handles.class).addListener(new HandleListener() {
+            @Override
+            public void handleCreated(Handle handle) {
+                handle.execute("PRAGMA foreign_keys = ON");
+            }
+        });
         return jdbi;
     }
 
     @Bean
-    CommandLineRunner setupSqliteDatabase(
-            Jdbi jdbi,
-            @Value("classpath:sql/schema.sql") Resource schemaResource) {
+    @Order(1)
+    public CommandLineRunner setupSqliteDatabase(
+            Jdbi jdbi) {
         return args -> {
-            String schema = schemaResource.getContentAsString(StandardCharsets.UTF_8);
-            jdbi.withHandle(handle -> handle.execute(schema));
+            String schema = ClasspathSqlLocator.create().locate("/sql/schema");
+            String[] tables = schema.split(";");
+            jdbi.useHandle(handle -> {
+                Batch batch = handle.createBatch();
+                for (String table : tables) {
+                    batch.add(table);
+                }
+                batch.execute();
+                handle.commit();
+            });
+
+            if (jdbi.withHandle(handle -> handle.createQuery("SELECT COUNT(*) FROM users").mapTo(Integer.class).one()) == 0) {
+                String mockData = ClasspathSqlLocator.create().locate("/sql/mockdata");
+                String[] inserts = mockData.split(";");
+                jdbi.useHandle(handle -> {
+                    Batch batch = handle.createBatch();
+                    for (String insert : inserts) {
+                        batch.add(insert);
+                    }
+                    batch.execute();
+                    handle.commit();
+                });
+            }
+
         };
     }
 
