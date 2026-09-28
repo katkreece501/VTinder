@@ -20,23 +20,23 @@ INSERT INTO users (uuid, name, email, password, is_moderator) VALUES
 -- in real image data as needed, this just satisfies the NOT NULL column
 -- ------------------------------------------------------------
 INSERT INTO profiles (user_uuid, school_year, bio, major, interests, grad_date, next_steps, age, height_inches, gender, image) VALUES
-     ('11111111-1111-4111-8111-111111111111', 'Senior', 'Fourth-year CS student who loves hackathons and rock climbing.', 'Computer Science', 'Climbing, hackathons, board games',        '2026-05-15', 'Software engineer at a startup', 21, 65, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('22222222-2222-4222-8222-222222222222', 'Junior', 'Junior studying mechanical engineering, into intramural soccer.', 'Mechanical Engineering', 'Soccer, robotics, camping',                '2027-12-14', 'Grad school for robotics',      20, 71, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('33333333-3333-4333-8333-333333333333', 'Senior', 'Biology major planning on med school, plays violin in free time.', 'Biology', 'Violin, volunteering, hiking',             '2026-05-15', 'Applying to med school',        22, 63, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('44444444-4444-4444-8444-444444444444', 'Senior', 'Senior finance major, runs the investment club on campus.', 'Finance', 'Investing, golf, chess',                   '2025-12-14', 'Analyst role in NYC',           22, 69, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('55555555-5555-4555-8555-555555555555', 'Freshman', 'Freshman exploring graphic design and photography.', 'Graphic Design', 'Photography, art, thrifting',              '2028-05-15', 'Undecided, exploring options',  18, 64, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('66666666-6666-4666-8666-666666666666', 'Senior', 'CS student focused on systems programming and Linux internals.', 'Computer Science', 'Linux, gaming, weightlifting',             '2026-05-15', 'Backend engineer role',         21, 73, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('77777777-7777-4777-8777-777777777777', 'Junior', 'Psychology major, loves baking and true crime podcasts.', 'Psychology', 'Baking, podcasts, yoga',                   '2027-12-14', 'Masters in counseling',         20, 62, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('88888888-8888-4888-8888-888888888888', 'Junior', 'Civil engineering senior, avid trail runner.', 'Civil Engineering', 'Running, kayaking, craft beer',            '2025-05-15', 'PE license and consulting job', 23, 70, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('99999999-9999-4999-8999-999999999999', 'Senior', 'Marketing major who runs a small Etsy shop on the side.', 'Marketing', 'Crafting, social media, dogs',             '2026-05-15', 'Brand marketing internship',    21, 66, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Sophomore', 'Electrical engineering student who builds synths as a hobby.', 'Electrical Engineering', 'Synths, music production, chess',    '2027-12-14', 'Internship at an audio company', 20, 72, 'Male', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082');
+     ('11111111-1111-4111-8111-111111111111', 'Senior', 'Fourth-year CS student who loves hackathons and rock climbing.', 'Computer Science', 'Climbing, hackathons, board games',        'Spring 2027', 'Working', 21, 65, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('22222222-2222-4222-8222-222222222222', 'Junior', 'Junior studying mechanical engineering, into intramural soccer.', 'Mechanical Engineering', 'Soccer, robotics, camping',                'Fall 2027', 'Grad School',      20, 71, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('33333333-3333-4333-8333-333333333333', 'Senior', 'Biology major planning on med school, plays violin in free time.', 'Biology', 'Violin, volunteering, hiking',             'Spring 2027', 'Medical School',        22, 63, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('44444444-4444-4444-8444-444444444444', 'Senior', 'Senior finance major, runs the investment club on campus.', 'Finance', 'Investing, golf, chess',                   'Fall 2026', 'Working',           22, 69, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('55555555-5555-4555-8555-555555555555', 'Freshman', 'Freshman exploring graphic design and photography.', 'Graphic Design', 'Photography, art, thrifting',              'Spring 2028', 'Still Deciding',  18, 64, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('66666666-6666-4666-8666-666666666666', 'Senior', 'CS student focused on systems programming and Linux internals.', 'Computer Science', 'Linux, gaming, weightlifting',             'Spring 2027', 'Working',         21, 73, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('77777777-7777-4777-8777-777777777777', 'Junior', 'Psychology major, loves baking and true crime podcasts.', 'Psychology', 'Baking, podcasts, yoga',                   'Fall 2027', 'Grad School',         20, 62, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('88888888-8888-4888-8888-888888888888', 'Junior', 'Civil engineering senior, avid trail runner.', 'Civil Engineering', 'Running, kayaking, craft beer',            'Fall 2026', 'Other', 23, 70, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('99999999-9999-4999-8999-999999999999', 'Senior', 'Marketing major who runs a small Etsy shop on the side.', 'Marketing', 'Crafting, social media, dogs',             'Spring 2027', 'Working',    21, 66, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
+     ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Sophomore', 'Electrical engineering student who builds synths as a hobby.', 'Electrical Engineering', 'Synths, music production, chess',    'Fall 2027', 'Military', 20, 72, 'Male', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082');
 
 -- ------------------------------------------------------------
 -- likes
 -- ------------------------------------------------------------
 INSERT INTO likes (liker_uuid, liked_uuid) VALUES
-   ('11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
-   ('33333333-3333-4333-8333-333333333333', '11111111-1111-4111-8111-111111111111'), -- mutual match
+   ('22222222-2222-4222-8222-222222222222', '33333333-3333-4333-8333-333333333333'),
+   ('33333333-3333-4333-8333-333333333333', '22222222-2222-4222-8222-222222222222'), -- mutual match
    ('22222222-2222-4222-8222-222222222222', '55555555-5555-4555-8555-555555555555'),
    ('55555555-5555-4555-8555-555555555555', '22222222-2222-4222-8222-222222222222'), -- mutual match
    ('66666666-6666-4666-8666-666666666666', '99999999-9999-4999-8999-999999999999'),
@@ -44,15 +44,15 @@ INSERT INTO likes (liker_uuid, liked_uuid) VALUES
    ('77777777-7777-4777-8777-777777777777', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
    ('88888888-8888-4888-8888-888888888888', '77777777-7777-4777-8777-777777777777'), -- one-sided, no match
    ('44444444-4444-4444-8444-444444444444', '99999999-9999-4999-8999-999999999999'), -- one-sided, no match
-   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '11111111-1111-4111-8111-111111111111'); -- one-sided, no match
+   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '22222222-2222-4222-8222-222222222222'); -- one-sided, no match
 
 -- ------------------------------------------------------------
 -- messages
 -- timestamps are unix epoch seconds, roughly Sept 2026, in conversation order
 -- ------------------------------------------------------------
 INSERT INTO messages (sender_uuid, receiver_uuid, timestamp, message) VALUES
-  ('11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333', 1758901200, 'Hey! I saw we matched, congrats on the violin recital btw'),
-  ('33333333-3333-4333-8333-333333333333', '11111111-1111-4111-8111-111111111111', 1758901500, 'Thank you!! Are you still into rock climbing? We should go sometime'),
+  ('22222222-2222-4222-8222-222222222222', '33333333-3333-4333-8333-333333333333', 1758901200, 'Hey! I saw we matched, congrats on the violin recital btw'),
+  ('33333333-3333-4333-8333-333333333333', '22222222-2222-4222-8222-222222222222', 1758901500, 'Thank you!! Are you still into rock climbing? We should go sometime'),
   ('11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333', 1758901800, 'Absolutely, there is a good gym near campus, want to go this weekend?'),
   ('22222222-2222-4222-8222-222222222222', '55555555-5555-4555-8555-555555555555', 1758988000, 'Hi Emma, love your photography portfolio!'),
   ('55555555-5555-4555-8555-555555555555', '22222222-2222-4222-8222-222222222222', 1758988400, 'Aw thank you so much! Do you play soccer intramurals still?'),
