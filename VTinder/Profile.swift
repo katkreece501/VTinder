@@ -5,12 +5,12 @@
 //
 
 import SwiftUI
-import SwiftData
+import Foundation
 import UIKit
 
-@Model
-class Profile {
-    var name:String // Name of the user
+struct Profile: Codable {
+    let userID: UUID
+    let name:String // Name of the user
     var year:String // Year in school; chosen from a drop down
     var bio:String // Whatever the user wants to put about themself
     var major:String // User's primary major; chosen from a drop down
@@ -23,7 +23,8 @@ class Profile {
     var gender:String // Gender of the user; chosen from a drop down
     var imageData: Data? // Data of the image to be displayed on the user profile
     
-    init(name: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightFeet: Int, heightInches: Int, gender: String, imageData: Data? = nil) {
+    init(userID: UUID, name: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightFeet: Int, heightInches: Int, gender: String, imageData: Data? = nil) {
+        self.userID = userID
         self.name = name
         self.year = year
         self.bio = bio
@@ -61,6 +62,7 @@ class Profile {
     
 }
 
+/*
 extension Profile {
     static var sample1: Profile {
         Profile(name: "Kathleen",
@@ -77,3 +79,4 @@ extension Profile {
                 imageData: UIImage(named: "SampleProfileImage1")?.jpegData(compressionQuality: 0.8))
     }
 }
+*/

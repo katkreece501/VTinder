@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import Foundation
 
-class User: Identifiable {
+struct User: Codable {
     var name: String
     var userID: UUID
     var email: String
@@ -29,7 +30,14 @@ struct UserHomeView: View {
     
     var body: some View {
         NavigationStack {
-            // TBD
+            VStack {
+                NavigationLink {
+                    ProfileView(profile: user.profile!, currUserID: user.userID)
+                } label: {
+                    Label("My Profile", systemImage: "person.crop.artframe")
+                }
+
+            }
         }
         .navigationTitle("Welcome to VTinder, \(user.name)!")
     }
