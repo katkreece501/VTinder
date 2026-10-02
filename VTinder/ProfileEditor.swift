@@ -37,8 +37,8 @@ struct ProfileEditor: View {
         _selectedGradDate = State(initialValue: profile?.stringToEnumGradDate() ?? .fall26)
         _selectedNextSteps = State(initialValue: profile?.stringToEnumNextSteps() ?? .gradSchool)
         _age = State(initialValue: profile?.age)
-        _heightFeet = State(initialValue: profile?.heightFeet)
-        _heightInches = State(initialValue: profile?.heightInches)
+        _heightFeet = State(initialValue: profile?.heightFeetPart())
+        _heightInches = State(initialValue: profile?.heightInchesPart())
         _selectedGender = State(initialValue: profile?.stringToEnumGender() ?? .female)
         _selectedImageData = State(initialValue: profile?.imageData)
     }

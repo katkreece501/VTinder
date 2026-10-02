@@ -10,15 +10,14 @@ import Foundation
 
 struct User: Codable {
     var name: String
-    var userID: UUID
+    var userID: String
     var email: String
     var password: String
     var isModerator: Bool
-    var profile: Profile?
     
     init(name: String, email: String, password: String, isModerator: Bool) {
         self.name = name
-        self.userID = UUID()
+        self.userID = UUID().uuidString
         self.email = email
         self.password = password
         self.isModerator = isModerator
@@ -32,7 +31,7 @@ struct UserHomeView: View {
         NavigationStack {
             VStack {
                 NavigationLink {
-                    ProfileView(profile: user.profile!, currUserID: user.userID)
+                    ProfileView(currUserID: user.userID)
                 } label: {
                     Label("My Profile", systemImage: "person.crop.artframe")
                 }

@@ -9,39 +9,40 @@ import SwiftUI
 import SwiftData
 
 struct ProfileView: View {
-    let profile: Profile
-    let currUserID: UUID
+    let apiService = APIService()
+    @State private var profile: Profile?
+    let currUserID: String
     
     var isOwnProfile: Bool {
-        profile.userID == currUserID
+        profile!.userID == currUserID
     }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Text("\(profile.name), \(profile.year)").font(.title).bold()
-                if let data = profile.imageData, let uiImage = UIImage(data: data) {
+                Text("\(profile!.name), \(profile!.year)").font(.title).bold()
+                if let data = profile!.imageData, let uiImage = UIImage(data: data) {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFit()
                         } else {
                             Image(systemName: "person.circle") // Fallback placeholder
                         }
-                Text("About Me: \(profile.bio)").font(.title3)
-                Text("Major: \(profile.major)").font(.title3)
-                Text("Interests: \(profile.interests)").font(.title3)
-                Text("Graduation Date: \(profile.gradDate)").font(.title3)
-                Text("Next Steps: \(profile.nextSteps)").font(.title3)
-                Text("Age: \(profile.age)").font(.title3)
-                Text("Height: \(profile.heightFeet) ft \(profile.heightInches) in").font(.title3)
-                Text("Gender: \(profile.gender)").font(.title3)
+                Text("About Me: \(profile!.bio)").font(.title3)
+                Text("Major: \(profile!.major)").font(.title3)
+                Text("Interests: \(profile!.interests)").font(.title3)
+                Text("Graduation Date: \(profile!.gradDate)").font(.title3)
+                Text("Next Steps: \(profile!.nextSteps)").font(.title3)
+                Text("Age: \(profile!.age)").font(.title3)
+                Text("Height: \(profile!.heightFeetPart()) ft \(profile!.heightInchesPart()) in").font(.title3)
+                Text("Gender: \(profile!.gender)").font(.title3)
                     }
                     .padding()
                     .toolbar {
                                 if isOwnProfile {
                                     ToolbarItem(placement: .topBarTrailing) {
                                         Button("Edit") {
-                                            ProfileEditor(profile: profile, name: profile.name)
+                                            ProfileEditor(profile: profile!, name: profile!.name)
                                         }
                                     }
                                 } else {
@@ -50,6 +51,16 @@ struct ProfileView: View {
                             }
             }
             .navigationTitle("Profile")
+            .task {
+                await loadData()
+            }
+    }
+    func loadData() async {
+        do {
+            profile = try await apiService.fetchProfile(userID: currUserID)
+        } catch {
+            print("Error: \(error)")
+        }
     }
 }
 

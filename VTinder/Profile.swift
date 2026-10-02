@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct Profile: Codable {
-    let userID: UUID
+    let userID: String
     let name:String // Name of the user
     var year:String // Year in school; chosen from a drop down
     var bio:String // Whatever the user wants to put about themself
@@ -18,12 +18,11 @@ struct Profile: Codable {
     var gradDate:String // User's projected graduation date; chosen from drop down
     var nextSteps:String // What the user wants to do after college; chosen from drop down
     var age:Int // Age of the user
-    var heightFeet:Int // Feet part of user's height
-    var heightInches:Int // Inches part of user's height
+    var heightInches:Int // User's height
     var gender:String // Gender of the user; chosen from a drop down
     var imageData: Data? // Data of the image to be displayed on the user profile
     
-    init(userID: UUID, name: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightFeet: Int, heightInches: Int, gender: String, imageData: Data? = nil) {
+    init(userID: String, name: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightInches: Int, gender: String, imageData: Data? = nil) {
         self.userID = userID
         self.name = name
         self.year = year
@@ -33,7 +32,6 @@ struct Profile: Codable {
         self.gradDate = gradDate
         self.nextSteps = nextSteps
         self.age = age
-        self.heightFeet = heightFeet
         self.heightInches = heightInches
         self.gender = gender
         self.imageData = imageData
@@ -59,7 +57,19 @@ struct Profile: Codable {
         return Gender(rawValue: self.gender)!
     }
     
+    func heightFeetPart() -> Int {
+        return heightInches / 12
+    }
     
+    func heightInchesPart() -> Int {
+        return heightInches % 12
+    }
+    
+    
+}
+
+struct ProfileResponse: Codable {
+    let results: Profile
 }
 
 /*
