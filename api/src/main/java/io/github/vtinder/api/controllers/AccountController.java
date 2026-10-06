@@ -9,6 +9,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static io.github.vtinder.api.services.AccountService.RegistrationFailedException;
@@ -27,7 +28,7 @@ public class AccountController {
 
     @GetMapping("/accounts/{uuid}")
     public ResponseEntity<User> getUser(@PathVariable String uuid) throws NoSuchEntityException {
-        return ResponseEntity.of(Optional.of(accountService.getUser(uuid)));
+        return ResponseEntity.ok(accountService.getUser(uuid));
     }
 
     // Create account user
@@ -40,7 +41,7 @@ public class AccountController {
     // Fetch specific profile
     @GetMapping("/profiles/{uuid}")
     public ResponseEntity<Profile> getProfile(@PathVariable String uuid) throws NoSuchEntityException {
-        return ResponseEntity.of(Optional.of(accountService.getProfile(uuid)));
+        return ResponseEntity.ok(accountService.getProfile(uuid));
     }
 
     // Edit profile endpoint
