@@ -3,7 +3,7 @@
 -- password values are placeholder bcrypt-style hashes, NOT real hashes
 -- ------------------------------------------------------------
 INSERT INTO users (uuid, name, email, password, is_moderator) VALUES
-    ('11111111-1111-4111-8111-111111111111', 'Ava Thompson',      'ava.thompson@vt.edu',      '$2b$12$9k3F1z7QeYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWa', 1),
+    ('11111111-1111-4111-8111-111111111111', 'Ava Thompson',      'ava.thompson@vt.edu',      '$2b$12$9k3F1z7QeYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWa', 0),
     ('22222222-2222-4222-8222-222222222222', 'Ben Rodriguez',     'ben.rodriguez@vt.edu',     '$2b$12$Kd8j2Lp0mYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWb', 0),
     ('33333333-3333-4333-8333-333333333333', 'Chloe Nguyen',      'chloe.nguyen@vt.edu',      '$2b$12$Zt5m9Xr3nYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWc', 0),
     ('44444444-4444-4444-8444-444444444444', 'Diego Alvarez',     'diego.alvarez@vt.edu',     '$2b$12$Pq7n4Ws6oYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWd', 0),
@@ -35,8 +35,8 @@ INSERT INTO profiles (user_uuid, school_year, bio, major, interests, grad_date, 
 -- likes
 -- ------------------------------------------------------------
 INSERT INTO likes (liker_uuid, liked_uuid) VALUES
-   ('22222222-2222-4222-8222-222222222222', '33333333-3333-4333-8333-333333333333'),
-   ('33333333-3333-4333-8333-333333333333', '22222222-2222-4222-8222-222222222222'), -- mutual match
+   ('11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333'),
+   ('33333333-3333-4333-8333-333333333333', '11111111-1111-4111-8111-111111111111'), -- mutual match
    ('22222222-2222-4222-8222-222222222222', '55555555-5555-4555-8555-555555555555'),
    ('55555555-5555-4555-8555-555555555555', '22222222-2222-4222-8222-222222222222'), -- mutual match
    ('66666666-6666-4666-8666-666666666666', '99999999-9999-4999-8999-999999999999'),
@@ -51,8 +51,8 @@ INSERT INTO likes (liker_uuid, liked_uuid) VALUES
 -- timestamps are unix epoch seconds, roughly Sept 2026, in conversation order
 -- ------------------------------------------------------------
 INSERT INTO messages (sender_uuid, receiver_uuid, timestamp, message) VALUES
-  ('22222222-2222-4222-8222-222222222222', '33333333-3333-4333-8333-333333333333', 1758901200, 'Hey! I saw we matched, congrats on the violin recital btw'),
-  ('33333333-3333-4333-8333-333333333333', '22222222-2222-4222-8222-222222222222', 1758901500, 'Thank you!! Are you still into rock climbing? We should go sometime'),
+  ('11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333', 1758901200, 'Hey! I saw we matched, congrats on the violin recital btw'),
+  ('33333333-3333-4333-8333-333333333333', '11111111-1111-4111-8111-111111111111', 1758901500, 'Thank you!! Are you still into rock climbing? We should go sometime'),
   ('11111111-1111-4111-8111-111111111111', '33333333-3333-4333-8333-333333333333', 1758901800, 'Absolutely, there is a good gym near campus, want to go this weekend?'),
   ('22222222-2222-4222-8222-222222222222', '55555555-5555-4555-8555-555555555555', 1758988000, 'Hi Emma, love your photography portfolio!'),
   ('55555555-5555-4555-8555-555555555555', '22222222-2222-4222-8222-222222222222', 1758988400, 'Aw thank you so much! Do you play soccer intramurals still?'),
