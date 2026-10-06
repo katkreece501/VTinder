@@ -1,9 +1,10 @@
 package io.github.vtinder.api.repositories;
 
+import io.github.vtinder.api.models.Dislike;
+import io.github.vtinder.api.models.Like;
 import io.github.vtinder.api.models.Profile;
 import io.github.vtinder.api.models.User;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.statement.Batch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +61,32 @@ public class VTinderRepository {
                 "UPDATE profiles SET school_year = :year, bio = :bio, major = :major, interests = :interests, "
                 +   "grad_date = :gradDate, next_steps = :nextSteps, age = :age, height_inches = :heightInches, "
                 +   "gender = :gender, image = :image WHERE user_uuid = :uuid").bindBean(profile).execute();
+        });
+    }
+
+    public int like(Like like) {
+        return jdbi.withHandle(handle -> {
+            return handle.createUpdate(
+                "INSERT INTO likes (liker_uuid, liked_uuid) VALUES (:liker, :liked)"
+            ).bindBean(like).execute();
+        });
+    }
+
+    public int dislike(Dislike dislike) {
+        return jdbi.withHandle(handle -> {
+            return handle.createUpdate(
+                "INSERT INTO dislikes (disliker_uuid, disliked_uuid) VALUES (:disliker, :disliked)"
+            ).bindBean(dislike).execute();
+        });
+    }
+
+    public List<Profile> getFeed(String uuid) {
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery(
+                "SELECT * FROM profiles WHERE "
+                +   "user_uuid NOT IN (SELECT liked_uuid FROM likes WHERE liker_uuid = :uuid) "
+                +   "AND user_uuid NOT IN (SELECT disliked_uuid FROM dislikes WHERE disliker_uuid = :uuid)"
+            ).bind("uuid", uuid).mapTo(Profile.class).list();
         });
     }
 
