@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class Profile {
 
     private String uuid;
-    private String name;
     private String year;
     private String bio;
     private String major;

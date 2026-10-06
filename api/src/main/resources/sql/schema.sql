@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS profiles (
     interests TEXT NOT NULL,
     grad_date TEXT NOT NULL,
     next_steps TEXT NOT NULL,
-    age INTEGER NOT NULL,
-    height_inches INTEGER NOT NULL,
+    age INTEGER,
+    height_inches INTEGER,
     gender TEXT NOT NULL,
-    image BLOB NOT NULL,
+    image BLOB,
 
     FOREIGN KEY (user_uuid) REFERENCES users (uuid)
 );
@@ -28,6 +28,14 @@ CREATE TABLE IF NOT EXISTS likes (
 
     FOREIGN KEY (liker_uuid) REFERENCES users (uuid),
     FOREIGN KEY (liked_uuid) REFERENCES users (uuid)
+);
+
+CREATE TABLE IF NOT EXISTS dislikes (
+    disliker_uuid TEXT NOT NULL,
+    disliked_uuid TEXT NOT NULL,
+
+    FOREIGN KEY (disliker_uuid) REFERENCES users (uuid),
+    FOREIGN KEY (disliked_uuid) REFERENCES users (uuid)
 );
 
 CREATE TABLE IF NOT EXISTS messages (

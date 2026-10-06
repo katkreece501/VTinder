@@ -1,18 +1,17 @@
 package io.github.vtinder.api.config;
 
 import io.github.vtinder.api.repositories.rowmappers.RowToProfileMapper;
+import io.github.vtinder.api.repositories.rowmappers.RowToUserMapper;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.HandleListener;
 import org.jdbi.v3.core.Handles;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.locator.ClasspathSqlLocator;
 import org.jdbi.v3.core.statement.Batch;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.io.Resource;
 import org.sqlite.SQLiteDataSource;
 
 import javax.sql.DataSource;
@@ -31,6 +30,7 @@ class RepositoryConfig {
     public Jdbi jdbi(DataSource dataSource) {
         Jdbi jdbi = Jdbi.create(dataSource);
         jdbi.registerRowMapper(new RowToProfileMapper());
+        jdbi.registerRowMapper(new RowToUserMapper());
         jdbi.getConfig(Handles.class).addListener(new HandleListener() {
             @Override
             public void handleCreated(Handle handle) {
