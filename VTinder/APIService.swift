@@ -20,4 +20,15 @@ class APIService {
         
         return response.results
     }
+    
+    func fetchUser(userID: String) async throws -> User {
+        // Step 1: create URL
+        let url = URL(string: "http://localhost:8080/users/\(userID)")!
+        // Step 2: make request
+        let (data, _) = try await URLSession.shared.data(from: url)
+        // Step 3: decode JSON into our model
+        let response = try JSONDecoder().decode(UserResponse.self, from: data)
+        
+        return response.results
+    }
 }

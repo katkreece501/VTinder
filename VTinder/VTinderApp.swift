@@ -11,7 +11,7 @@ import SwiftUI
 struct VTinderApp: App {
     var body: some Scene {
         WindowGroup {
-            ProfileEditor(profile: nil)
+            //UserHomeView(profile: nil)
         }
     }
 }

@@ -12,16 +12,18 @@ struct User: Codable {
     var name: String
     var userID: String
     var email: String
-    var password: String
     var isModerator: Bool
     
-    init(name: String, email: String, password: String, isModerator: Bool) {
+    init(name: String, email: String, isModerator: Bool) {
         self.name = name
         self.userID = UUID().uuidString
         self.email = email
-        self.password = password
         self.isModerator = isModerator
     }
+}
+
+struct UserResponse: Codable {
+    let results: User
 }
 
 struct UserHomeView: View {
