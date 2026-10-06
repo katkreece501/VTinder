@@ -60,11 +60,11 @@ class RepositoryConfig {
                 String mockData = ClasspathSqlLocator.create().locate("/sql/mockdata");
                 String[] inserts = mockData.split(";");
                 jdbi.useHandle(handle -> {
-                    Batch batch = handle.createBatch();
                     for (String insert : inserts) {
-                        batch.add(insert);
+                        if (!insert.isBlank()) {
+                            handle.execute(insert);
+                        }
                     }
-                    batch.execute();
                     handle.commit();
                 });
             }

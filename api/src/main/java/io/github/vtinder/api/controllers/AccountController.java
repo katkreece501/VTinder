@@ -32,8 +32,8 @@ public class AccountController {
 
     // Create account user
     @PostMapping("/accounts")
-    public ResponseEntity<String> registerUser(@RequestBody Registration req) throws RegistrationFailedException {
-        accountService.registerUser(req);
+    public ResponseEntity<String> registerUser(RequestEntity<Registration> req) throws RegistrationFailedException {
+        accountService.registerUser(req.getBody());
         return ResponseEntity.ok("Success\n");
     }
 
