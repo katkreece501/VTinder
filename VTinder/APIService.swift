@@ -41,6 +41,34 @@ class APIService {
         return profiles
     }
     
+    func sendLikeOrDislike(swiperID: String, swipeeID: String, isLike: Bool) async throws {
+        let url: URL
+        if isLike {
+            url = URL(string: "http://localhost:8080/feed/like/\(swiperID)/\(swipeeID)")!
+        }
+        else {
+            url = URL(string: "http://localhost:8080/feed/dislike/\(swiperID)/\(swipeeID)")!
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if isLike {
+            request.httpBody = try JSONEncoder().encode(Like(liker: swiperID, liked: swipeeID))
+        }
+        else {
+            request.httpBody = try JSONEncoder().encode(Dislike(disliker: swiperID, disliked: swipeeID))
+        }
+        let (data, response) = try await URLSession.shared.data(for: request)
+        if let httpResponse = response as? HTTPURLResponse {
+            print("Status code:", httpResponse.statusCode)
+            print("Response:", String(data: data, encoding: .utf8) ?? "No response body")
+
+            guard 200..<300 ~= httpResponse.statusCode else {
+                throw URLError(.badServerResponse)
+            }
+        }
+    }
+    
     func updateProfile(profile: Profile) async throws {
             let url = URL(
                 string: "http://localhost:8080/profiles"
@@ -54,14 +82,7 @@ class APIService {
             )
 
             request.httpBody = try JSONEncoder().encode(profile)
-        /*
-            let (_, response) = try await URLSession.shared.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                  200..<300 ~= httpResponse.statusCode else {
-                throw URLError(.badServerResponse)
-            }
-         */
+        
         let (data, response) = try await URLSession.shared.data(for: request)
 
             if let httpResponse = response as? HTTPURLResponse {
@@ -73,4 +94,14 @@ class APIService {
                 }
             }
         }
+}
+
+struct Like: Codable {
+    let liker: String
+    let liked: String
+}
+
+struct Dislike: Codable {
+    let disliker: String
+    let disliked: String
 }

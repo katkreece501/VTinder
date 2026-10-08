@@ -100,7 +100,3 @@ struct ProfileView: View {
     }
      */
 }
-
-#Preview {
-    //ProfileView(profile: .sample1)
-}

@@ -11,7 +11,9 @@ import SwiftUI
 struct VTinderApp: App {
     var body: some Scene {
         WindowGroup {
-            ProfileSwiper(currUserID: "66666666-6666-4666-8666-666666666666")
+            //ProfileSwiper(currUserID: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa")
+            // 99999999-9999-4999-8999-999999999999
+            DaterHomeView(currUserID: "99999999-9999-4999-8999-999999999999")
         }
     }
 }

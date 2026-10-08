@@ -87,13 +87,13 @@ struct ProfileEditor: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
                         Task {
-                                                    do {
-                                                        try await saveProfile()
-                                                        dismiss()
-                                                    } catch {
-                                                        print("Failed to save profile: \(error)")
-                                                    }
-                                                }
+                            do {
+                                try await saveProfile()
+                                dismiss()
+                            } catch {
+                                print("Failed to save profile: \(error)")
+                            }
+                        }
                     }
                 }
             }

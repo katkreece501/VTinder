@@ -14,24 +14,51 @@ struct ProfileSwiper: View {
     @State private var profiles: [Profile] = []
     @State private var profilesIndex = 0
     @State private var names: [String] = []
-    //@State private var profileUser: User
-    /*
-    var cleanedProfiles: [Profile] {
-        profiles.filter { profile in
-                profile.uuid != currUserID
-            }
-    }
-     */
+    @State private var swipeAmount: CGSize = .zero
+    @State var isLoading = true
     
     var body: some View {
         VStack {
             //profiles = removeCurrentUser(profiles: profiles, currUserID: currUserID)
             //var names = getNames(profiles: profiles)
-            if profiles.isEmpty {
+            if isLoading {
                 ProgressView("Loading profiles...")
             }
             else if profilesIndex < profiles.count && profilesIndex < names.count {
                 ProfileView(profile: profiles[profilesIndex], currUserID: currUserID, name: names[profilesIndex])
+                    .offset(swipeAmount)
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ value in
+                                swipeAmount = value.translation
+                            })
+                            .onEnded({ value in
+                                if swipeAmount.width > 0 {
+                                    Task {
+                                        do {
+                                            try await apiService.sendLikeOrDislike(swiperID: currUserID, swipeeID: profiles[profilesIndex].uuid, isLike: true)
+                                        }
+                                        catch {
+                                            print("Error: \(error)")
+                                        }
+                                    }
+                                }
+                                else {
+                                    Task {
+                                        do {
+                                            try await apiService.sendLikeOrDislike(swiperID: currUserID, swipeeID: profiles[profilesIndex].uuid, isLike: false)
+                                        }
+                                        catch {
+                                            print("Error: \(error)")
+                                        }
+                                    }
+                                }
+                                if profilesIndex + 1 < profiles.count {
+                                    profilesIndex += 1
+                                }
+                                swipeAmount = .zero
+                            })
+                    )
             }
             else {
                 Text("No more profiles")
@@ -48,8 +75,10 @@ struct ProfileSwiper: View {
                         profile.uuid != currUserID
                     }
             names = await getNames(profiles: profiles)
+            isLoading = false
         } catch {
             print("Error: \(error)")
+            isLoading = false
         }
     }
     func getNames(profiles: [Profile]) async -> [String] {
