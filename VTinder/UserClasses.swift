@@ -10,13 +10,13 @@ import Foundation
 
 struct User: Codable {
     var name: String
-    var userID: String
+    var uuid: String
     var email: String
     var isModerator: Bool
     
     init(name: String, email: String, isModerator: Bool) {
         self.name = name
-        self.userID = UUID().uuidString
+        self.uuid = UUID().uuidString
         self.email = email
         self.isModerator = isModerator
     }
@@ -27,19 +27,51 @@ struct UserResponse: Codable {
 }
 
 struct UserHomeView: View {
-    let user: User
+    let apiService = APIService()
+    @State private var user: User?
+    @State private var profile: Profile?
+    let currUserID: String
     
     var body: some View {
         NavigationStack {
             VStack {
-                NavigationLink {
-                    ProfileView(currUserID: user.userID)
-                } label: {
-                    Label("My Profile", systemImage: "person.crop.artframe")
+                if let user {
+                    if let profile {
+                        NavigationLink {
+                            ProfileView(profile: profile, currUserID: currUserID, name: user.name)
+                        } label: {
+                            Label(
+                                "My Profile",
+                                systemImage: "person.crop.artframe"
+                            )
+                        }
+                        .task {
+                            await loadProfileData()
+                        }
+                    }
+                } else {
+                    ProgressView("Loading...")
+                        .navigationTitle("Loading...")
                 }
-
             }
+            .navigationTitle("Welcome to VTinder!")
         }
-        .navigationTitle("Welcome to VTinder, \(user.name)!")
+        .task {
+            await loadUserData()
+        }
+    }
+func loadUserData() async {
+    do {
+        user = try await apiService.fetchUser(userID: currUserID)
+    } catch {
+        print("Error: \(error)")
+    }
+}
+    func loadProfileData() async {
+        do {
+            profile = try await apiService.fetchProfile(userID: currUserID)
+        } catch {
+            print("Error: \(error)")
+        }
     }
 }

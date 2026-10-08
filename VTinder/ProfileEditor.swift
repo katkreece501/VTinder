@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
-
 struct ProfileEditor: View {
+    let apiService = APIService()
     let profile: Profile?
     let name: String
     private var editorTitle: String {profile == nil ? "Create Profile" : "Edit Profile"}
@@ -27,6 +27,8 @@ struct ProfileEditor: View {
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var selectedImageData: Data?
     
+    @Environment(\.dismiss) private var dismiss
+    
     init(profile: Profile?, name: String) {
         self.profile = profile
         self.name = name
@@ -40,7 +42,7 @@ struct ProfileEditor: View {
         _heightFeet = State(initialValue: profile?.heightFeetPart())
         _heightInches = State(initialValue: profile?.heightInchesPart())
         _selectedGender = State(initialValue: profile?.stringToEnumGender() ?? .female)
-        _selectedImageData = State(initialValue: profile?.imageData)
+        _selectedImageData = State(initialValue: profile?.image)
     }
     
     var body: some View {
@@ -81,6 +83,43 @@ struct ProfileEditor: View {
                 }
             }
             .navigationTitle(editorTitle)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Save") {
+                        Task {
+                                                    do {
+                                                        try await saveProfile()
+                                                        dismiss()
+                                                    } catch {
+                                                        print("Failed to save profile: \(error)")
+                                                    }
+                                                }
+                    }
+                }
+            }
         }
+    }
+    func saveProfile() async throws {
+        guard let profile else {
+            return
+        }
+
+        let totalHeightInches =
+            (heightFeet ?? 0) * 12 + (heightInches ?? 0)
+
+        let updatedProfile = Profile(
+            uuid: profile.uuid,
+            year: selectedYear.rawValue,
+            bio: bio,
+            major: selectedMajor.rawValue,
+            interests: interests,
+            gradDate: selectedGradDate.rawValue,
+            nextSteps: selectedNextSteps.rawValue,
+            age: age ?? 0,
+            heightInches: totalHeightInches,
+            gender: selectedGender.rawValue,
+            image: selectedImageData
+        )
+        try await apiService.updateProfile(profile: updatedProfile)
     }
 }
