@@ -4,6 +4,7 @@ import io.github.vtinder.api.models.Profile;
 import io.github.vtinder.api.models.Registration;
 import io.github.vtinder.api.models.User;
 import io.github.vtinder.api.repositories.VTinderRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,8 @@ public class AccountService {
     }
 
     public void registerUser(Registration registration) throws RegistrationFailedException {
+        // Hashes password before inserting
+        registration.setPassword(BCrypt.hashpw(registration.getPassword(), BCrypt.gensalt()));
         int rowsEdited = repository.registerUser(
             new User(registration.getUuid(),
                 registration.getName(),

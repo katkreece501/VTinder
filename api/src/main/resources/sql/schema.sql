@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
     uuid TEXT NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     is_moderator INTEGER NOT NULL CHECK (is_moderator IN (0, 1)) -- sqlite boolean
 );

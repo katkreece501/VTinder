@@ -1,7 +1,6 @@
 package io.github.vtinder.api.controllers;
 
 import io.github.vtinder.api.models.Profile;
-import io.github.vtinder.api.models.Registration;
 import io.github.vtinder.api.models.User;
 import io.github.vtinder.api.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
-import static io.github.vtinder.api.services.AccountService.RegistrationFailedException;
+import static io.github.vtinder.api.security.JwtAuthConfiguration.InvalidJwtException;
+import static io.github.vtinder.api.security.JwtAuthConfiguration.verifyIdentity;
 import static io.github.vtinder.api.services.AccountService.NoSuchEntityException;
 
 // TODO handle checked exceptions
@@ -27,27 +24,25 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{uuid}")
-    public ResponseEntity<User> getUser(@PathVariable String uuid) throws NoSuchEntityException {
-        return ResponseEntity.ok(accountService.getUser(uuid));
-    }
-
-    // Create account user
-    @PostMapping("/accounts")
-    public ResponseEntity<String> registerUser(RequestEntity<Registration> req) throws RegistrationFailedException {
-        accountService.registerUser(req.getBody());
-        return ResponseEntity.ok("Success\n");
+    public ResponseEntity<User> getUser(@RequestHeader("Authorization") String jwt) throws NoSuchEntityException, InvalidJwtException {
+        String userUUID = verifyIdentity(jwt);
+        return ResponseEntity.ok(accountService.getUser(userUUID));
     }
 
     // Fetch specific profile
     @GetMapping("/profiles/{uuid}")
-    public ResponseEntity<Profile> getProfile(@PathVariable String uuid) throws NoSuchEntityException {
-        return ResponseEntity.ok(accountService.getProfile(uuid));
+    public ResponseEntity<Profile> getProfile(@RequestHeader("Authorization") String jwt) throws NoSuchEntityException, InvalidJwtException {
+        String userUUID = verifyIdentity(jwt);
+        return ResponseEntity.ok(accountService.getProfile(userUUID));
     }
 
     // Edit profile endpoint
     @PutMapping("/profiles")
-    public ResponseEntity<String> editProfile(RequestEntity<Profile> profile) throws NoSuchEntityException {
-        accountService.editProfile(profile.getBody());
+    public ResponseEntity<String> editProfile(@RequestHeader("Authorization") String jwt, RequestEntity<Profile> req) throws NoSuchEntityException, InvalidJwtException {
+        String userUUID = verifyIdentity(jwt);
+        Profile profile = req.getBody();
+        profile.setUuid(userUUID);
+        accountService.editProfile(profile);
         return ResponseEntity.ok("Success\n");
     }
 

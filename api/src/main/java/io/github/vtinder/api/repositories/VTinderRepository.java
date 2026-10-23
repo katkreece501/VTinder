@@ -99,4 +99,11 @@ public class VTinderRepository {
         );
     }
 
+    public Optional<String> getHashedPassword(String userUUID, String hashPwd) {
+        return jdbi.withHandle(handle -> {
+           return handle.createQuery("SELECT password FROM users WHERE uuid = ?")
+               .bind(0, userUUID).mapTo(String.class).findOne();
+        });
+    }
+
 }

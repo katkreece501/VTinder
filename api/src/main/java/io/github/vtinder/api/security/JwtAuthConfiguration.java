@@ -1,21 +1,32 @@
 package io.github.vtinder.api.security;
 
-import io.github.vtinder.api.repositories.VTinderRepository;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.time.Duration;
 
 @Configuration
-public class JwtAuthConfig {
+public class JwtAuthConfiguration {
 
-    private final VTinderRepository repository;
+    public static final Duration JWT_LIFE = Duration.ofSeconds(3600); // Tokens expire after an hour
+    // HMAC keys must be at least 256 bits
+    public static final SecretKey JWT_SECRET = Keys.hmacShaKeyFor("super-secure-server-secret-padded-to-32+bytes-so-that-it-works".getBytes());
 
-    @Autowired
-    public JwtAuthAspect(VTinderRepository repository) {
-        this.repository = repository;
+    public static String verifyIdentity(String jwt) throws InvalidJwtException {
+        if (jwt.startsWith("Bearer ")) jwt = jwt.substring("Bearer ".length());
+        try {
+            return Jwts.parser().verifyWith(JWT_SECRET).build()
+                    .parseSignedClaims(jwt).getPayload().getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidJwtException(e.getMessage());
+        }
     }
 
+    public static class InvalidJwtException extends Exception {
+        public InvalidJwtException(String msg) {super(msg);}
+    }
 
 }
