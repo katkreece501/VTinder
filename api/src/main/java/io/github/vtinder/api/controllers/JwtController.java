@@ -1,7 +1,7 @@
 package io.github.vtinder.api.controllers;
 
+import io.github.vtinder.api.models.User;
 import io.github.vtinder.api.repositories.VTinderRepository;
-import io.jsonwebtoken.Jwts;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.util.Date;
+import java.util.Optional;
 
-import static io.github.vtinder.api.security.JwtAuthConfiguration.JWT_LIFE;
-import static io.github.vtinder.api.security.JwtAuthConfiguration.JWT_SECRET;
+import static io.github.vtinder.api.security.JwtAuthConfiguration.issueJwt;
 
 @RestController
 public class JwtController {
@@ -27,28 +25,23 @@ public class JwtController {
         this.repository = repository;
     }
 
-    @GetMapping("/auth/{userUUID}/{password}")
-    public ResponseEntity<Void> issueJwt(@PathVariable String userUUID, @PathVariable String password) {
+    @GetMapping("/auth/{email}/{password}")
+    public ResponseEntity<String> issueJwtForUser(@PathVariable String email, @PathVariable String password) {
+        Optional<User> user = repository.findUserByEmail(email);
         // Unknown users get the same 401 as a wrong password
-        boolean authenticated = repository.getHashedPassword(userUUID, password)
+        boolean authenticated = user
+                .flatMap(u -> repository.getHashedPassword(u.getUuid(), password))
                 .map(hashedPassword -> BCrypt.checkpw(password, hashedPassword))
                 .orElse(false);
 
         if (!authenticated) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        Instant now = Instant.now();
-
-        String jwt = Jwts.builder()
-            .issuer("VTinderAPI")
-            .subject(userUUID)
-            .issuedAt(Date.from(now))
-            .expiration(Date.from(now.plus(JWT_LIFE)))
-            .signWith(JWT_SECRET)
-            .compact();
+        String userUUID = user.get().getUuid();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + jwt);
+        headers.set("Authorization", "Bearer " + issueJwt(userUUID));
 
-        return ResponseEntity.ok().headers(headers).build();
+        // The app needs the uuid to know who just logged in
+        return ResponseEntity.ok().headers(headers).body(userUUID);
     }
 
 }

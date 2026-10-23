@@ -29,6 +29,13 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getUser(userUUID));
     }
 
+    // Any logged-in user can see another user's name (and nothing else)
+    @GetMapping("/names/{uuid}")
+    public ResponseEntity<String> getName(@RequestHeader("Authorization") String jwt, @PathVariable String uuid) throws NoSuchEntityException, InvalidJwtException {
+        verifyIdentity(jwt);
+        return ResponseEntity.ok(accountService.getUser(uuid).getName());
+    }
+
     // Fetch specific profile
     @GetMapping("/profiles/{uuid}")
     public ResponseEntity<Profile> getProfile(@RequestHeader("Authorization") String jwt) throws NoSuchEntityException, InvalidJwtException {

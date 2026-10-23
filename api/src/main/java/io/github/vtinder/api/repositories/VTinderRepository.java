@@ -46,6 +46,14 @@ public class VTinderRepository {
         });
     }
 
+    public Optional<User> findUserByEmail(String email) {
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery(
+                "SELECT * FROM users WHERE email = ?")
+                .bind(0, email).mapTo(User.class).findOne();
+        });
+    }
+
     public Optional<Profile> findProfileByUuid(String uuid) {
         return jdbi.withHandle(handle -> {
             return handle.createQuery(
