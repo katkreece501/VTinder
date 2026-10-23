@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 struct Profile: Codable {
-    let userID: String
-    let name:String // Name of the user
+    let uuid: String
+    //let name:String // Name of the user
     var year:String // Year in school; chosen from a drop down
     var bio:String // Whatever the user wants to put about themself
     var major:String // User's primary major; chosen from a drop down
@@ -20,11 +20,11 @@ struct Profile: Codable {
     var age:Int // Age of the user
     var heightInches:Int // User's height
     var gender:String // Gender of the user; chosen from a drop down
-    var imageData: Data? // Data of the image to be displayed on the user profile
+    var image: Data? // Data of the image to be displayed on the user profile
     
-    init(userID: String, name: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightInches: Int, gender: String, imageData: Data? = nil) {
-        self.userID = userID
-        self.name = name
+    init(uuid: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightInches: Int, gender: String, image: Data? = nil) {
+        self.uuid = uuid
+        //self.name = name
         self.year = year
         self.bio = bio
         self.major = major
@@ -34,7 +34,7 @@ struct Profile: Codable {
         self.age = age
         self.heightInches = heightInches
         self.gender = gender
-        self.imageData = imageData
+        self.image = image
     }
     
     func stringToEnumYear() -> SchoolYear {
@@ -68,8 +68,8 @@ struct Profile: Codable {
     
 }
 
-struct ProfileResponse: Codable {
-    let results: Profile
+struct ProfilesResponse: Codable {
+    let results: [Profile]
 }
 
 /*

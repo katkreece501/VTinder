@@ -120,7 +120,7 @@ enum Major:String, CaseIterable, Identifiable {
     case marketing = "Marketing"
     case materialEng = "Materials Science and Engineering"
     case mech = "Mechanical Engineering"
-    case medChem = "Medical Chemistry"
+    case medChem = "Medicinal Chemistry"
     case med = "Medicine"
     case meteor = "Meteorology"
     case microBio = "Microbiology"

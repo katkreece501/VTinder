@@ -16,19 +16,92 @@ class APIService {
         // Step 2: make request
         let (data, _) = try await URLSession.shared.data(from: url)
         // Step 3: decode JSON into our model
-        let response = try JSONDecoder().decode(ProfileResponse.self, from: data)
+        let profile = try JSONDecoder().decode(Profile.self, from: data)
         
-        return response.results
+        return profile
     }
     
     func fetchUser(userID: String) async throws -> User {
         // Step 1: create URL
-        let url = URL(string: "http://localhost:8080/users/\(userID)")!
+        let url = URL(string: "http://localhost:8080/accounts/\(userID)")!
         // Step 2: make request
         let (data, _) = try await URLSession.shared.data(from: url)
-        // Step 3: decode JSON into our model
-        let response = try JSONDecoder().decode(UserResponse.self, from: data)
-        
-        return response.results
+        let user = try JSONDecoder().decode(User.self, from: data)
+
+        return user
     }
+    
+    func fetchProfiles(userID: String) async throws -> [Profile] {
+        let url = URL(string: "http://localhost:8080/feed/\(userID)")!
+        // Step 2: make request
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        let profiles = try JSONDecoder().decode([Profile].self, from: data)
+
+        return profiles
+    }
+    
+    func sendLikeOrDislike(swiperID: String, swipeeID: String, isLike: Bool) async throws {
+        let url: URL
+        if isLike {
+            url = URL(string: "http://localhost:8080/feed/like/\(swiperID)/\(swipeeID)")!
+        }
+        else {
+            url = URL(string: "http://localhost:8080/feed/dislike/\(swiperID)/\(swipeeID)")!
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if isLike {
+            request.httpBody = try JSONEncoder().encode(Like(liker: swiperID, liked: swipeeID))
+        }
+        else {
+            request.httpBody = try JSONEncoder().encode(Dislike(disliker: swiperID, disliked: swipeeID))
+        }
+        let (data, response) = try await URLSession.shared.data(for: request)
+        if let httpResponse = response as? HTTPURLResponse {
+            print("Status code:", httpResponse.statusCode)
+            print("Response:", String(data: data, encoding: .utf8) ?? "No response body")
+
+            guard 200..<300 ~= httpResponse.statusCode else {
+                throw URLError(.badServerResponse)
+            }
+        }
+    }
+    
+    func updateProfile(profile: Profile) async throws {
+            let url = URL(
+                string: "http://localhost:8080/profiles"
+            )!
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue(
+                "application/json",
+                forHTTPHeaderField: "Content-Type"
+            )
+
+            request.httpBody = try JSONEncoder().encode(profile)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Status code:", httpResponse.statusCode)
+                print("Response:", String(data: data, encoding: .utf8) ?? "No response body")
+
+                guard 200..<300 ~= httpResponse.statusCode else {
+                    throw URLError(.badServerResponse)
+                }
+            }
+        }
+}
+
+struct Like: Codable {
+    let liker: String
+    let liked: String
+}
+
+struct Dislike: Codable {
+    let disliker: String
+    let disliked: String
 }
