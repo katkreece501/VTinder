@@ -38,23 +38,23 @@ struct Profile: Codable {
     }
     
     func stringToEnumYear() -> SchoolYear {
-        return SchoolYear(rawValue: self.year)!
+        return SchoolYear(rawValue: self.year) ?? .freshman
     }
     
     func stringToEnumMajor() -> Major {
-        return Major(rawValue: self.major)!
+        return Major(rawValue: self.major) ?? .accounting
     }
     
     func stringToEnumGradDate() -> GradDate {
-        return GradDate(rawValue: self.gradDate)!
+        return GradDate(rawValue: self.gradDate) ?? .fall26
     }
     
     func stringToEnumNextSteps() -> NextSteps {
-        return NextSteps(rawValue: self.nextSteps)!
+        return NextSteps(rawValue: self.nextSteps) ?? .gradSchool
     }
     
     func stringToEnumGender() -> Gender {
-        return Gender(rawValue: self.gender)!
+        return Gender(rawValue: self.gender) ?? .female
     }
     
     func heightFeetPart() -> Int {

@@ -86,10 +86,11 @@ struct ProfileSwiper: View {
 
         for profile in profiles {
             do {
-                let user = try await apiService.fetchUser(userID: profile.uuid)
-                names.append(user.name)
+                let name = try await apiService.fetchName(userID: profile.uuid)
+                names.append(name)
             } catch {
                 print("Error: \(error)")
+                names.append("Unknown") // Keeps names lined up with profiles
             }
         }
 
