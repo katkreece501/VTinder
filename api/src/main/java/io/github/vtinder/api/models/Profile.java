@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Profile {
 
+    private String name;
     private String uuid;
     private String year;
     private String bio;

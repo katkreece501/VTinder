@@ -42,9 +42,9 @@ public class FeedController {
 
     // Get profiles available to user endpoint
     @GetMapping("/feed/{uuid}")
-    public ResponseEntity<List<Profile>> getFeed(@RequestHeader("Authorization") String jwt, @PathVariable String uuid)
+    public ResponseEntity<List<Profile>> getFeed(@RequestHeader("Authorization") String jwt)
             throws InvalidJwtException {
-        verifyIdentity(jwt);
+        String uuid = verifyIdentity(jwt);
         return ResponseEntity.ok(feedService.getFeed(uuid));
     }
 

@@ -91,9 +91,10 @@ public class VTinderRepository {
     public List<Profile> getFeed(String uuid) {
         return jdbi.withHandle(handle -> {
             return handle.createQuery(
-                "SELECT * FROM profiles WHERE "
+                "SELECT * FROM profiles p RIGHT JOIN users u ON u.uuid = p.user_uuid WHERE "
                 +   "user_uuid NOT IN (SELECT liked_uuid FROM likes WHERE liker_uuid = :uuid) "
-                +   "AND user_uuid NOT IN (SELECT disliked_uuid FROM dislikes WHERE disliker_uuid = :uuid)"
+                +   "AND user_uuid NOT IN (SELECT disliked_uuid FROM dislikes WHERE disliker_uuid = :uuid) "
+                +   "AND NOT p.user_uuid = :uuid"
             ).bind("uuid", uuid).mapTo(Profile.class).list();
         });
     }
