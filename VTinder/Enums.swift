@@ -56,7 +56,7 @@ enum GradDate:String, CaseIterable, Identifiable {
 }
 
 // The possible majors.
-// NOTE: This is not all possible majors at VT; these majors all had over 100 students sometime in since the 2023-2024 school year (infor from University Data Commons). Some majors have been combined (ie., two Accounting majors have been combined into just Accounting).
+// NOTE: This is not all possible majors at VT; these majors all had over 100 students sometime in since the 2023-2024 school year (info from University Data Commons). Some majors have been combined (ie., two Accounting majors have been combined into just Accounting).
 enum Major:String, CaseIterable, Identifiable {
     case accounting = "Accounting"
     case advertising = "Advertising"
