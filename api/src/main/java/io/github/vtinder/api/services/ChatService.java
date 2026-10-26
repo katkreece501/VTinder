@@ -18,8 +18,8 @@ public class ChatService {
         this.repository = repository;
     }
 
-    public List<Profile> getMatches(User user) {
-        return null;
+    public List<Profile> getMatches(String userUuid) {
+        return repository.getMatches(userUuid);
     }
 
 }

@@ -115,4 +115,14 @@ public class VTinderRepository {
         });
     }
 
+    public List<Profile> getMatches(String userUUID) {
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery(
+                "SELECT p.*, u.name FROM profiles p RIGHT JOIN users u ON u.uuid = p.user_uuid "
+                +   "WHERE user_uuid IN (SELECT liked_uuid FROM likes WHERE liker_uuid = :uuid) "
+                +   "AND user_uuid IN (SELECT liker_uuid FROM likes WHERE liked_uuid = :uuid)")
+                   .bind("uuid", userUUID).mapTo(Profile.class).list();
+        });
+    }
+
 }

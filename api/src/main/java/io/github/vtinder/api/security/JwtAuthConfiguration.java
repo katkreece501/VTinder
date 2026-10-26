@@ -29,8 +29,8 @@ public class JwtAuthConfiguration {
     }
 
     public static String verifyIdentity(String jwt) throws InvalidJwtException {
-        System.out.println("Token: " + jwt);
-        if (jwt.equals("Bearer mastertoken9000")) return "11111111-1111-4111-8111-111111111111";
+//        System.out.println("Token: " + jwt);
+//        if (jwt.equals("Bearer mastertoken9000")) return "11111111-1111-4111-8111-111111111111";
         if (jwt.startsWith("Bearer ")) jwt = jwt.substring("Bearer ".length());
         try {
             return Jwts.parser().verifyWith(JWT_SECRET).build()
