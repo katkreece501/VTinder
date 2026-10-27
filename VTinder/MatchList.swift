@@ -25,7 +25,7 @@ struct MatchRow: View {
         HStack {
             Text(name)
             Button() {
-                ProfileView(profile: profile, currUserID: currentUserID, name: name)
+                ProfileView(profile: profile, currUserID: currentUserID)
             } label: {
                 Text("View Profile")
             }

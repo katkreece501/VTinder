@@ -24,7 +24,7 @@ struct VTinderApp: App {
                     // New users fill out their profile before seeing the home page
                     .fullScreenCover(isPresented: $showEditor) {
                         if let newProfile {
-                            ProfileEditor(profile: newProfile, name: newName)
+                            ProfileEditor(profile: newProfile)
                         }
                     }
             } else {

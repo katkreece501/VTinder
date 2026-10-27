@@ -13,7 +13,7 @@ struct ProfileSwiper: View {
     
     @State private var profiles: [Profile] = []
     @State private var profilesIndex = 0
-    @State private var names: [String] = []
+    //@State private var names: [String] = []
     @State private var swipeAmount: CGSize = .zero
     @State var isLoading = true
     
@@ -24,8 +24,8 @@ struct ProfileSwiper: View {
             if isLoading {
                 ProgressView("Loading profiles...")
             }
-            else if profilesIndex < profiles.count && profilesIndex < names.count {
-                ProfileView(profile: profiles[profilesIndex], currUserID: currUserID, name: names[profilesIndex])
+            else if profilesIndex < profiles.count {
+                ProfileView(profile: profiles[profilesIndex], currUserID: currUserID)
                     .offset(swipeAmount)
                     .gesture(
                         DragGesture()
@@ -71,16 +71,19 @@ struct ProfileSwiper: View {
     func loadProfiles() async {
         do {
             profiles = try await apiService.fetchProfiles(userID: currUserID)
+            /*
             profiles = profiles.filter { profile in
                         profile.uuid != currUserID
                     }
-            names = await getNames(profiles: profiles)
+             */
+            //names = await getNames(profiles: profiles)
             isLoading = false
         } catch {
             print("Error: \(error)")
             isLoading = false
         }
     }
+    /*
     func getNames(profiles: [Profile]) async -> [String] {
         var names: [String] = []
 
@@ -96,4 +99,5 @@ struct ProfileSwiper: View {
 
         return names
     }
+     */
 }

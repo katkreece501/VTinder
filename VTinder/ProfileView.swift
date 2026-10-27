@@ -14,14 +14,14 @@ struct ProfileView: View {
     //@State private var profileUser: User?
     let currUserID: String
     //let profileUserID: String
-    let name:String
+    //let name:String
     @State private var latestProfile: Profile? // Refetched each time your own profile appears
     private var shown: Profile { latestProfile ?? profile }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Text("\(name), \(shown.year)").font(.title).bold()
+                Text("\(shown.name), \(shown.year)").font(.title).bold()
                 if let data = shown.image, let uiImage = UIImage(data: data) {
                             Image(uiImage: uiImage)
                                 .resizable()
@@ -43,7 +43,7 @@ struct ProfileView: View {
                         if shown.uuid == currUserID {
                             ToolbarItem(placement: .topBarTrailing) {
                                 NavigationLink("Edit") {
-                                    ProfileEditor(profile: shown, name: name)
+                                    ProfileEditor(profile: shown)
                                 }
                             }
                         }

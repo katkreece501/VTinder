@@ -12,7 +12,6 @@ import PhotosUI
 struct ProfileEditor: View {
     let apiService = APIService()
     let profile: Profile?
-    let name: String
     private var editorTitle: String {profile == nil ? "Create Profile" : "Edit Profile"}
     @State private var selectedYear: SchoolYear
     @State private var bio: String
@@ -29,9 +28,8 @@ struct ProfileEditor: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    init(profile: Profile?, name: String) {
+    init(profile: Profile?) {
         self.profile = profile
-        self.name = name
         _selectedYear = State(initialValue: profile?.stringToEnumYear() ?? .freshman)
         _bio = State(initialValue: profile?.bio ?? "")
         _selectedMajor = State(initialValue: profile?.stringToEnumMajor() ?? .accounting)
@@ -108,6 +106,7 @@ struct ProfileEditor: View {
             (heightFeet ?? 0) * 12 + (heightInches ?? 0)
 
         let updatedProfile = Profile(
+            name: profile.name,
             uuid: profile.uuid,
             year: selectedYear.rawValue,
             bio: bio,

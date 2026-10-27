@@ -79,7 +79,7 @@ struct RegistrationView: View {
             return
         }
 
-        let profile: Profile = Profile(uuid: uuid,
+        let profile: Profile = Profile(name: name, uuid: uuid,
                                        year: SchoolYear.freshman.rawValue,
                                        bio: "",
                                        major: Major.accounting.rawValue,

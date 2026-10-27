@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 struct Profile: Codable {
+    let name:String // Name of the user
     let uuid: String
-    //let name:String // Name of the user
     var year:String // Year in school; chosen from a drop down
     var bio:String // Whatever the user wants to put about themself
     var major:String // User's primary major; chosen from a drop down
@@ -22,9 +22,9 @@ struct Profile: Codable {
     var gender:String // Gender of the user; chosen from a drop down
     var image: Data? // Data of the image to be displayed on the user profile
     
-    init(uuid: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightInches: Int, gender: String, image: Data? = nil) {
+    init(name: String, uuid: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightInches: Int, gender: String, image: Data? = nil) {
+        self.name = name
         self.uuid = uuid
-        //self.name = name
         self.year = year
         self.bio = bio
         self.major = major

@@ -18,7 +18,7 @@ struct DaterHomeView: View {
             VStack {
                 if let user, let profile {
                     NavigationLink {
-                        ProfileView(profile: profile, currUserID: currUserID, name: user.name)
+                        ProfileView(profile: profile, currUserID: currUserID)
                     } label: {
                         Label(
                             "My Profile",
