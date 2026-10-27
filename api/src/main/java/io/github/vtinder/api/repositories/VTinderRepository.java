@@ -91,9 +91,10 @@ public class VTinderRepository {
     public List<Profile> getFeed(String uuid) {
         return jdbi.withHandle(handle -> {
             return handle.createQuery(
-                "SELECT * FROM profiles WHERE "
+                "SELECT * FROM profiles p RIGHT JOIN users u ON u.uuid = p.user_uuid WHERE "
                 +   "user_uuid NOT IN (SELECT liked_uuid FROM likes WHERE liker_uuid = :uuid) "
-                +   "AND user_uuid NOT IN (SELECT disliked_uuid FROM dislikes WHERE disliker_uuid = :uuid)"
+                +   "AND user_uuid NOT IN (SELECT disliked_uuid FROM dislikes WHERE disliker_uuid = :uuid) "
+                +   "AND NOT p.user_uuid = :uuid"
             ).bind("uuid", uuid).mapTo(Profile.class).list();
         });
     }
@@ -111,6 +112,16 @@ public class VTinderRepository {
         return jdbi.withHandle(handle -> {
            return handle.createQuery("SELECT password FROM users WHERE uuid = ?")
                .bind(0, userUUID).mapTo(String.class).findOne();
+        });
+    }
+
+    public List<Profile> getMatches(String userUUID) {
+        return jdbi.withHandle(handle -> {
+            return handle.createQuery(
+                "SELECT p.*, u.name FROM profiles p RIGHT JOIN users u ON u.uuid = p.user_uuid "
+                +   "WHERE user_uuid IN (SELECT liked_uuid FROM likes WHERE liker_uuid = :uuid) "
+                +   "AND user_uuid IN (SELECT liker_uuid FROM likes WHERE liked_uuid = :uuid)")
+                   .bind("uuid", userUUID).mapTo(Profile.class).list();
         });
     }
 
