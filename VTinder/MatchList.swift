@@ -51,17 +51,19 @@ struct MatchList: View {
 struct MatchRow: View {
     var profile: Profile
     var currentUserID: String
-    
+
     var body: some View {
         HStack {
             Text(profile.name)
-            Button() {
-                ProfileView(profile: profile, currUserID: currentUserID)
+
+            NavigationLink {
+                ProfileView(
+                    profile: profile,
+                    currUserID: currentUserID
+                )
             } label: {
                 Text("View Profile")
             }
-            .foregroundStyle(.blue)
-            .buttonStyle(.borderless)
         }
     }
 }

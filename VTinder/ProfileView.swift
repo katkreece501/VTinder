@@ -39,6 +39,7 @@ struct ProfileView: View {
                 Text("Gender: \(shown.gender)").font(.title3)
                     }
                     .padding()
+            /*
                     .toolbar {
                         if shown.uuid == currUserID {
                             ToolbarItem(placement: .topBarTrailing) {
@@ -48,65 +49,15 @@ struct ProfileView: View {
                             }
                         }
                     }
-            /*
-            if let profile {
-                VStack(spacing: 20) {
-                    Text("\(name), \(profile.year)").font(.title).bold()
-                    if let data = profile.image, let uiImage = UIImage(data: data) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFit()
-                            } else {
-                                Image(systemName: "person.circle") // Fallback placeholder
-                            }
-                    Text("About Me: \(profile.bio)").font(.title3)
-                    Text("Major: \(profile.major)").font(.title3)
-                    Text("Interests: \(profile.interests)").font(.title3)
-                    Text("Graduation Date: \(profile.gradDate)").font(.title3)
-                    Text("Next Steps: \(profile.nextSteps)").font(.title3)
-                    Text("Age: \(profile.age)").font(.title3)
-                    Text("Height: \(profile.heightFeetPart()) ft \(profile.heightInchesPart()) in").font(.title3)
-                    Text("Gender: \(profile.gender)").font(.title3)
-                        }
-                        .padding()
-                        .toolbar {
-                            if profile.uuid == currUserID {
-                                ToolbarItem(placement: .topBarTrailing) {
-                                    NavigationLink("Edit") {
-                                        ProfileEditor(profile: profile, name: name)
-                                    }
-                                }
-                            }
-                        }
-            }
-            else {
-                ProgressView("Loading...")
-                    .navigationTitle("Loading...")
-            }
             */
             }
-            .navigationTitle("Profile")
             .task {
                 // Only your own profile can change while you're looking at it
                 if profile.uuid == currUserID {
                     await loadLatestProfile()
                 }
             }
-        /*
-            .task {
-                await loadData()
-            }
-         */
     }
-    /*
-    func loadData() async {
-        do {
-            profile = try await apiService.fetchProfile(userID: profileUserID)
-        } catch {
-            print("Error: \(error)")
-        }
-    }
-     */
     func loadLatestProfile() async {
         do {
             latestProfile = try await apiService.fetchProfile(userID: currUserID)

@@ -9,59 +9,44 @@ import SwiftUI
 
 struct DaterHomeView: View {
     let apiService = APIService()
-    //@State private var user: User?
     @State private var profile: Profile?
     let currUserID: String
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                if let profile {
-                    NavigationLink {
+        TabView {
+            Tab("My Profile", systemImage: "person.crop.artframe") {
+                NavigationStack {
+                    if let profile {
                         ProfileView(profile: profile, currUserID: currUserID)
-                    } label: {
-                        Label(
-                            "My Profile",
-                            systemImage: "person.crop.artframe"
-                        )
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    NavigationLink("Edit") {
+                                        ProfileEditor(profile: profile)
+                                    }
+                                }
+                            }
+                            .navigationTitle("My Profile")
                     }
-                    NavigationLink {
-                        ProfileSwiper(currUserID: currUserID)
-                    } label: {
-                        Label(
-                            "Find Matches",
-                            systemImage: "person.crop.square.on.square.angled"
-                        )
+                    else {
+                        ProgressView("Loading...")
                     }
-                    NavigationLink {
-                        MatchList(currentUserID: currUserID)
-                    } label: {
-                        Label(
-                            "See Matches",
-                            systemImage: "heart"
-                        )
-                    }
-                } else {
-                    ProgressView("Loading...")
-                        .navigationTitle("Loading...")
                 }
             }
-            .navigationTitle("Welcome to VTinder!")
+            Tab("Swipe", systemImage: "person.crop.square.on.square.angled") {
+                NavigationStack {
+                    ProfileSwiper(currUserID: currUserID)
+                }
+            }
+            Tab("My Matches", systemImage: "heart") {
+                NavigationStack {
+                    MatchList(currentUserID: currUserID)
+                }
+            }
         }
         .task {
-            //await loadUserData()
             await loadProfileData()
         }
     }
-    /*
-func loadUserData() async {
-    do {
-        user = try await apiService.fetchUser(userID: currUserID)
-    } catch {
-        print("Error: \(error)")
-    }
-}
-     */
     func loadProfileData() async {
         do {
             profile = try await apiService.fetchProfile(userID: currUserID)
