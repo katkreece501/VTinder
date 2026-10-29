@@ -8,22 +8,53 @@
 import SwiftUI
 
 struct MatchList: View {
-    private var matches: [Profile]
-    private var names: [String]
+    @State var matches: [Profile] = []
+    var currentUserID: String
+    @State var isLoading = true
+    let apiService = APIService()
     
     var body: some View {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+        NavigationStack {
+            if isLoading {
+                ProgressView("Loading matches...")
+            }
+            else if matches.isEmpty {
+                ContentUnavailableView {
+                    Label("No Matches Yet...", systemImage: "tortoise")
+                } description: {
+                    Text("Keep swiping to find matches!")
+                }
+            }
+            else {
+                List {
+                    ForEach(matches, id: \.uuid) { match in
+                        MatchRow(profile: match, currentUserID: currentUserID)
+                    }
+                }
+            }
+        }
+        .task {
+            await loadMatches()
+        }
+    }
+    func loadMatches() async {
+        do {
+            matches = try await apiService.fetchMatches()
+            isLoading = false
+        } catch {
+            print("Error: \(error)")
+            isLoading = false
+        }
     }
 }
 
 struct MatchRow: View {
-    private var profile: Profile
-    private var name: String
-    private var currentUserID: String
+    var profile: Profile
+    var currentUserID: String
     
     var body: some View {
         HStack {
-            Text(name)
+            Text(profile.name)
             Button() {
                 ProfileView(profile: profile, currUserID: currentUserID)
             } label: {
@@ -31,10 +62,6 @@ struct MatchRow: View {
             }
             .foregroundStyle(.blue)
             .buttonStyle(.borderless)
-            /*
-             Spacer()
-             Link to chat with this match here...
-             */
         }
     }
 }

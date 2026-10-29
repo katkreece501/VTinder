@@ -19,6 +19,9 @@ class APIService {
         var request = URLRequest(url: url)
         authorize(&request)
         let (data, _) = try await URLSession.shared.data(for: request)
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Raw Response: \(responseString)")
+        }
         // Step 3: decode JSON into our model
         let profile = try JSONDecoder().decode(Profile.self, from: data)
         
@@ -33,7 +36,7 @@ class APIService {
         authorize(&request)
         let (data, _) = try await URLSession.shared.data(for: request)
         let user = try JSONDecoder().decode(User.self, from: data)
-
+        
         return user
     }
     
@@ -62,6 +65,17 @@ class APIService {
         let profiles = try JSONDecoder().decode([Profile].self, from: data)
 
         return profiles
+    }
+    
+    func fetchMatches() async throws -> [Profile] {
+        let url = URL(string: "http://localhost:8080/chat")!
+        var request = URLRequest(url: url)
+        authorize(&request)
+        let (data, _) = try await URLSession.shared.data(for: request)
+        
+        let matches = try JSONDecoder().decode([Profile].self, from: data)
+
+        return matches
     }
     
     func sendLikeOrDislike(swiperID: String, swipeeID: String, isLike: Bool) async throws {
