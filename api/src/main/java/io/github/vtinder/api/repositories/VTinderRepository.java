@@ -2,9 +2,12 @@ package io.github.vtinder.api.repositories;
 
 import io.github.vtinder.api.models.Dislike;
 import io.github.vtinder.api.models.Like;
+import io.github.vtinder.api.models.Message;
 import io.github.vtinder.api.models.Profile;
 import io.github.vtinder.api.models.User;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -123,6 +126,63 @@ public class VTinderRepository {
                 +   "AND user_uuid IN (SELECT liker_uuid FROM likes WHERE liked_uuid = :uuid)")
                    .bind("uuid", userUUID).mapTo(Profile.class).list();
         });
+    }
+
+    private static final int MESSAGE_PAGE_SIZE = 20;
+
+    public List<Message> getMessages(String userUUID, String otherUUID, Long beforeId, Long afterId)
+            throws NotMatchedException {
+        String conversation =
+                "SELECT *, sender_uuid = :uuid AS from_me FROM messages "
+            +   "WHERE ((sender_uuid = :uuid AND receiver_uuid = :other) "
+            +   "OR (sender_uuid = :other AND receiver_uuid = :uuid))";
+        String sql;
+        if (afterId != null) {
+            sql = conversation + " AND id > :afterId ORDER BY id";
+        } else {
+            String before = beforeId != null ? " AND id < :beforeId" : "";
+            sql = "SELECT * FROM (" + conversation + before + " ORDER BY id DESC LIMIT :limit) ORDER BY id";
+        }
+        return jdbi.withHandle(handle -> {
+            requireMatch(handle, userUUID, otherUUID);
+            // Jdbi rejects bindings the SQL doesn't use, so only bind what this shape needs
+            Query query = handle.createQuery(sql).bind("uuid", userUUID).bind("other", otherUUID);
+            if (afterId != null) {
+                query.bind("afterId", afterId);
+            } else {
+                query.bind("limit", MESSAGE_PAGE_SIZE);
+                if (beforeId != null) query.bind("beforeId", beforeId);
+            }
+            return query.mapTo(Message.class).list();
+        });
+    }
+
+    public int sendMessage(Message message) throws NotMatchedException {
+        return jdbi.inTransaction(handle -> {
+            requireMatch(handle, message.getSenderUUID(), message.getReceiverUUID());
+            return handle.createUpdate(
+                "INSERT INTO messages (sender_uuid, receiver_uuid, timestamp, message) "
+                +   "VALUES (:senderUUID, :receiverUUID, :timestamp, :message)")
+                    .bind("senderUUID", message.getSenderUUID())
+                    .bind("receiverUUID", message.getReceiverUUID())
+                    .bind("timestamp", message.getTimestamp().getEpochSecond())
+                    .bind("message", message.getMessage()).execute();
+        });
+    }
+
+    // Throws unless both users have liked each other
+    static void requireMatch(Handle handle, String userUUID, String otherUUID) throws NotMatchedException {
+        boolean matched = handle.createQuery(
+            "SELECT EXISTS (SELECT 1 FROM likes WHERE liker_uuid = :uuid AND liked_uuid = :other) "
+            +   "AND EXISTS (SELECT 1 FROM likes WHERE liker_uuid = :other AND liked_uuid = :uuid)")
+                .bind("uuid", userUUID).bind("other", otherUUID).mapTo(Boolean.class).one();
+        if (!matched) {
+            throw new NotMatchedException(userUUID + " and " + otherUUID + " are not matched");
+        }
+    }
+
+    public static class NotMatchedException extends Exception {
+        public NotMatchedException(String msg) {super(msg);}
     }
 
 }

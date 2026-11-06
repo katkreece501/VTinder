@@ -1,5 +1,6 @@
 package io.github.vtinder.api.config;
 
+import io.github.vtinder.api.repositories.rowmappers.RowToMessageMapper;
 import io.github.vtinder.api.repositories.rowmappers.RowToProfileMapper;
 import io.github.vtinder.api.repositories.rowmappers.RowToUserMapper;
 import org.jdbi.v3.core.Handle;
@@ -31,6 +32,7 @@ class RepositoryConfig {
         Jdbi jdbi = Jdbi.create(dataSource);
         jdbi.registerRowMapper(new RowToProfileMapper());
         jdbi.registerRowMapper(new RowToUserMapper());
+        jdbi.registerRowMapper(new RowToMessageMapper());
         jdbi.getConfig(Handles.class).addListener(new HandleListener() {
             @Override
             public void handleCreated(Handle handle) {

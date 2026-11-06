@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS dislikes (
 );
 
 CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     sender_uuid TEXT NOT NULL,
     receiver_uuid TEXT NOT NULL,
     timestamp INTEGER NOT NULL, -- store in unix epoch format
@@ -47,3 +48,5 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (sender_uuid) REFERENCES users (uuid),
     FOREIGN KEY (receiver_uuid) REFERENCES users (uuid)
 );
+
+CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages (sender_uuid, receiver_uuid, id);
