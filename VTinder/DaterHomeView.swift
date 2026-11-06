@@ -9,14 +9,14 @@ import SwiftUI
 
 struct DaterHomeView: View {
     let apiService = APIService()
-    @State private var user: User?
+    //@State private var user: User?
     @State private var profile: Profile?
     let currUserID: String
     
     var body: some View {
         NavigationStack {
             VStack {
-                if let user, let profile {
+                if let profile {
                     NavigationLink {
                         ProfileView(profile: profile, currUserID: currUserID)
                     } label: {
@@ -33,6 +33,14 @@ struct DaterHomeView: View {
                             systemImage: "person.crop.square.on.square.angled"
                         )
                     }
+                    NavigationLink {
+                        MatchList(currentUserID: currUserID)
+                    } label: {
+                        Label(
+                            "See Matches",
+                            systemImage: "heart"
+                        )
+                    }
                 } else {
                     ProgressView("Loading...")
                         .navigationTitle("Loading...")
@@ -41,10 +49,11 @@ struct DaterHomeView: View {
             .navigationTitle("Welcome to VTinder!")
         }
         .task {
-            await loadUserData()
+            //await loadUserData()
             await loadProfileData()
         }
     }
+    /*
 func loadUserData() async {
     do {
         user = try await apiService.fetchUser(userID: currUserID)
@@ -52,6 +61,7 @@ func loadUserData() async {
         print("Error: \(error)")
     }
 }
+     */
     func loadProfileData() async {
         do {
             profile = try await apiService.fetchProfile(userID: currUserID)
