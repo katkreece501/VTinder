@@ -52,7 +52,7 @@ struct MatchList: View {
 struct MatchRow: View {
     var profile: Profile
     var currentUserID: String
-    
+
     var body: some View {
         // Tapping a match opens the chat with them
         NavigationLink(destination: { () -> ChatView in
