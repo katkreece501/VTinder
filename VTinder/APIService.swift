@@ -77,7 +77,63 @@ class APIService {
 
         return matches
     }
-    
+
+    // Gets messages with a match (newest 20, 20 before beforeId, or everything after afterId)
+    func fetchMessages(with uuid: String, beforeId: Int?, afterId: Int?) async throws -> [Message] {
+        // Only add the id that was given
+        var urlString: String = "http://localhost:8080/chat/\(uuid)"
+        if let id: Int = beforeId {
+            urlString += "?beforeId=\(id)"
+        } else if let id: Int = afterId {
+            urlString += "?afterId=\(id)"
+        }
+        let url: URL = URL(string: urlString)!
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "GET"
+        // timeout after 15 seconds
+        request.timeoutInterval = 15
+        authorize(&request)
+
+        let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
+        let data: Data = result.0
+        let response: URLResponse = result.1
+
+        // 403 here means the two users aren't matched
+        guard let http: HTTPURLResponse = response as? HTTPURLResponse else {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+        if http.statusCode < 200 || http.statusCode > 299 {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+
+        // Turn the JSON into a list of messages
+        let messages: [Message] = try JSONDecoder().decode([Message].self, from: data)
+        return messages
+    }
+
+    // Sends a text message to a match
+    func sendMessage(to uuid: String, text: String) async throws {
+        let url: URL = URL(string: "http://localhost:8080/chat/\(uuid)")!
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "POST"
+        // timeout after 15 seconds
+        request.timeoutInterval = 15
+        // The server takes the message as plain text, not JSON
+        request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
+        request.httpBody = Data(text.utf8)
+        authorize(&request)
+
+        let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
+        let response: URLResponse = result.1
+
+        guard let http: HTTPURLResponse = response as? HTTPURLResponse else {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+        if http.statusCode < 200 || http.statusCode > 299 {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+    }
+
     func sendLikeOrDislike(swiperID: String, swipeeID: String, isLike: Bool) async throws {
         let url: URL
         if isLike {

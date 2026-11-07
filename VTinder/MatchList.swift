@@ -14,7 +14,8 @@ struct MatchList: View {
     let apiService = APIService()
     
     var body: some View {
-        NavigationStack {
+        // No NavigationStack here; this screen is pushed onto the home screen's stack
+        Group(content: {
             if isLoading {
                 ProgressView("Loading matches...")
             }
@@ -32,7 +33,7 @@ struct MatchList: View {
                     }
                 }
             }
-        }
+        })
         .task {
             await loadMatches()
         }
@@ -53,15 +54,11 @@ struct MatchRow: View {
     var currentUserID: String
     
     var body: some View {
-        HStack {
-            Text(profile.name)
-            Button() {
-                ProfileView(profile: profile, currUserID: currentUserID)
-            } label: {
-                Text("View Profile")
-            }
-            .foregroundStyle(.blue)
-            .buttonStyle(.borderless)
-        }
+        // Tapping a match opens the chat with them
+        NavigationLink(destination: { () -> ChatView in
+            return ChatView(profile: profile, currentUserID: currentUserID)
+        }, label: { () -> Text in
+            return Text(profile.name)
+        })
     }
 }
