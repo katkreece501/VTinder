@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+struct Report: Codable {
+    var reporter: String // who is submitting the report (an ID)
+    var reportee: String // who is being reported on (this will just be a name)
+    var reportContent: String // the content of the report
+}
+
 struct ReportForm: View {
     @State private var reportee: String = ""
     @State private var reportContent: String = ""
