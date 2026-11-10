@@ -17,6 +17,8 @@ struct ProfileView: View {
     //let name:String
     @State private var latestProfile: Profile? // Refetched each time your own profile appears
     private var shown: Profile { latestProfile ?? profile }
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @State private var showProfileInfo = false
     
     var body: some View {
         ScrollView {
@@ -39,17 +41,31 @@ struct ProfileView: View {
                 Text("Gender: \(shown.gender)").font(.title3)
                     }
                     .padding()
-            /*
                     .toolbar {
                         if shown.uuid == currUserID {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                NavigationLink("Edit") {
-                                    ProfileEditor(profile: shown)
+                            if horizontalSizeClass != .compact {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    NavigationLink("Edit") {
+                                        ProfileEditor(profile: shown)
+                                    }
+                                }
+                            }
+                            ToolbarItem(placement: .bottomBar) {
+                                Button {
+                                    showProfileInfo = true
+                                } label: {
+                                    Image(systemName: "questionmark")
+                                }
+                                .popover(isPresented: $showProfileInfo) {
+                                    Text("This is what your profile looks like to other users. Make changes by clicking Edit.")
+                                        .padding()
+                                        .frame(width: 250)
+                                        .presentationCompactAdaptation(.popover)
                                 }
                             }
                         }
                     }
-            */
+                    .navigationTitle("My Profile")
             }
             .task {
                 // Only your own profile can change while you're looking at it

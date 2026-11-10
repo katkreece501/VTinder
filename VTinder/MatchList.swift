@@ -12,6 +12,7 @@ struct MatchList: View {
     var currentUserID: String
     @State var isLoading = true
     let apiService = APIService()
+    @State private var showMatchesInfo = false
     
     var body: some View {
         // No NavigationStack here; this screen is pushed onto the home screen's stack
@@ -36,6 +37,21 @@ struct MatchList: View {
         })
         .task {
             await loadMatches()
+        }
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                Button {
+                    showMatchesInfo = true
+                } label: {
+                    Image(systemName: "questionmark")
+                }
+                .popover(isPresented: $showMatchesInfo) {
+                    Text("If a user shows up here, you've liked them and they've liked you! Click on their name to chat with them.")
+                        .padding()
+                        .frame(width: 250)
+                        .presentationCompactAdaptation(.popover)
+                }
+            }
         }
     }
     func loadMatches() async {

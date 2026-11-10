@@ -60,8 +60,17 @@ struct ProfileEditor: View {
                 Picker("Next Steps", selection: $selectedNextSteps) {
                     ForEach(NextSteps.allCases) { steps in Text(steps.rawValue) }
                 }
+                Text("Age")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 TextField("Age", value: $age, format: .number)
+                Text("Height (Feet)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 TextField("Height (Feet)", value: $heightFeet, format: .number)
+                Text("Height (Inches)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 TextField("Height (Inches)", value: $heightInches, format: .number)
                 Picker("Gender", selection: $selectedGender) {
                     ForEach(Gender.allCases) { gend in Text(gend.rawValue) }
@@ -101,7 +110,6 @@ struct ProfileEditor: View {
         guard let profile else {
             return
         }
-
         let totalHeightInches =
             (heightFeet ?? 0) * 12 + (heightInches ?? 0)
 

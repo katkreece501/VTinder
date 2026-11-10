@@ -8,6 +8,7 @@
 import SwiftUI
 import Foundation
 
+
 class APIService {
     private static var jwt: String? // Set once the user logs in
     
@@ -18,9 +19,15 @@ class APIService {
         // Step 2: make request
         var request = URLRequest(url: url)
         authorize(&request)
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        /*
         if let responseString = String(data: data, encoding: .utf8) {
             print("Raw Response: \(responseString)")
+        }
+         */
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.userAuthenticationRequired)
         }
         // Step 3: decode JSON into our model
         let profile = try JSONDecoder().decode(Profile.self, from: data)
@@ -34,7 +41,12 @@ class APIService {
         // Step 2: make request
         var request = URLRequest(url: url)
         authorize(&request)
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        
         let user = try JSONDecoder().decode(User.self, from: data)
         
         return user
@@ -60,8 +72,11 @@ class APIService {
         // Step 2: make request
         var request = URLRequest(url: url)
         authorize(&request)
-        let (data, _) = try await URLSession.shared.data(for: request)
-        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.userAuthenticationRequired)
+        }
         let profiles = try JSONDecoder().decode([Profile].self, from: data)
 
         return profiles
@@ -71,8 +86,11 @@ class APIService {
         let url = URL(string: "http://localhost:8080/chat")!
         var request = URLRequest(url: url)
         authorize(&request)
-        let (data, _) = try await URLSession.shared.data(for: request)
-        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.userAuthenticationRequired)
+        }
         let matches = try JSONDecoder().decode([Profile].self, from: data)
 
         return matches
@@ -193,8 +211,9 @@ class APIService {
     // Log in with email and password; returns the user's ID
     func login(email: String, password: String) async throws -> String {
         let url = URL(string: "http://localhost:8080/auth/\(email)/\(password)")!
-        let (data, response) = try await URLSession.shared.data(from: url)
-
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 10
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse,
               200..<300 ~= httpResponse.statusCode else {
             throw URLError(.userAuthenticationRequired)

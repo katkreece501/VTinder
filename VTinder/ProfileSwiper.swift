@@ -10,7 +10,7 @@ import SwiftUI
 struct ProfileSwiper: View {
     let apiService = APIService()
     let currUserID: String
-    
+    @State private var showSwipeInfo = false
     @State private var profiles: [Profile] = []
     @State private var profilesIndex = 0
     @State private var swipeAmount: CGSize = .zero
@@ -54,6 +54,21 @@ struct ProfileSwiper: View {
             }
             else {
                 Text("No more profiles!")
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                Button {
+                    showSwipeInfo = true
+                } label: {
+                    Image(systemName: "questionmark")
+                }
+                .popover(isPresented: $showSwipeInfo) {
+                    Text("If you are interested in dating a user, swipe to the right on their profile. If not, swipe to the left.")
+                        .padding()
+                        .frame(width: 250)
+                        .presentationCompactAdaptation(.popover)
+                }
             }
         }
         .task {
