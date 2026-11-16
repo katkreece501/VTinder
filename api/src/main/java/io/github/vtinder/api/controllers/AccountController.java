@@ -49,9 +49,9 @@ public class AccountController {
 
     // Fetch specific profile
     @GetMapping("/profiles/{uuid}")
-    public ResponseEntity<Profile> getProfile(@RequestHeader("Authorization") String jwt) throws NoSuchEntityException, InvalidJwtException {
+    public ResponseEntity<Profile> getProfile(@RequestHeader("Authorization") String jwt, @PathVariable String uuid) throws NoSuchEntityException, InvalidJwtException {
         String userUUID = verifyIdentity(jwt);
-        return ResponseEntity.ok(accountService.getProfile(userUUID));
+        return ResponseEntity.ok(accountService.getProfile(userUUID, uuid));
     }
 
     // Edit profile endpoint

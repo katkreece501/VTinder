@@ -63,7 +63,7 @@ public class ChatService {
         if (repository.findUserByUuid(reportedUuid).isEmpty()) {
             throw new NoSuchEntityException("No user with uuid " + reportedUuid);
         }
-        repository.addReport(new Report(0, reporterUuid, reportedUuid, Instant.now(), reason));
+        repository.addReport(new Report(0, reporterUuid, null, reportedUuid, null, Instant.now(), reason));
     }
 
     public static class InvalidReportException extends Exception {

@@ -62,11 +62,13 @@ public class VTinderRepository {
         });
     }
 
-    public Optional<Profile> findProfileByUuid(String uuid) {
+    // Moderators pass includeBanned so they can still look at banned users
+    public Optional<Profile> findProfileByUuid(String uuid, boolean includeBanned) {
+        String banned = includeBanned ? "" : " AND u.banned = 0";
         return jdbi.withHandle(handle -> {
             return handle.createQuery(
             "SELECT p.*, u.name FROM profiles p RIGHT JOIN users u"
-                +   " ON p.user_uuid = u.uuid WHERE u.uuid = ? AND u.banned = 0")
+                +   " ON p.user_uuid = u.uuid WHERE u.uuid = ?" + banned)
                 .bind(0, uuid).mapTo(Profile.class).findOne();
         });
     }
@@ -239,7 +241,11 @@ public class VTinderRepository {
     // Moderator view, so reports involving banned users are included
     public List<Report> getReports() {
         return jdbi.withHandle(handle -> {
-            return handle.createQuery("SELECT * FROM reports ORDER BY timestamp DESC, id DESC")
+            return handle.createQuery(
+                "SELECT r.*, a.name AS reporter_name, b.name AS reported_name FROM reports r "
+                +   "JOIN users a ON a.uuid = r.reporter_uuid "
+                +   "JOIN users b ON b.uuid = r.reported_uuid "
+                +   "ORDER BY r.timestamp DESC, r.id DESC")
                 .mapTo(Report.class).list();
         });
     }

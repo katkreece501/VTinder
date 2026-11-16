@@ -15,7 +15,9 @@ public class RowToReportMapper implements RowMapper<Report> {
         return new Report(
             rs.getLong("id"),
             rs.getString("reporter_uuid"),
+            rs.getString("reporter_name"),
             rs.getString("reported_uuid"),
+            rs.getString("reported_name"),
             Instant.ofEpochSecond(rs.getLong("timestamp")),
             rs.getString("reason")
         );

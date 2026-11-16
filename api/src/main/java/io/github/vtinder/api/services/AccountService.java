@@ -41,8 +41,9 @@ public class AccountService {
                 .orElseThrow(() -> new NoSuchEntityException("No user with uuid " + uuid));
     }
 
-    public Profile getProfile(String uuid) throws NoSuchEntityException {
-        return repository.findProfileByUuid(uuid)
+    // Anyone can view a profile, but only moderators can view banned users' profiles
+    public Profile getProfile(String viewerUuid, String uuid) throws NoSuchEntityException {
+        return repository.findProfileByUuid(uuid, repository.isModerator(viewerUuid))
                 .orElseThrow(() -> new NoSuchEntityException("No profile with uuid " + uuid));
     }
 

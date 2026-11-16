@@ -13,7 +13,9 @@ public class Report {
 
     private long id;
     private String reporter;
+    private String reporterName;
     private String reported;
+    private String reportedName;
     private Instant timestamp;
     private String reason;
 
