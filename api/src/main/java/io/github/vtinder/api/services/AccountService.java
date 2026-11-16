@@ -27,6 +27,7 @@ public class AccountService {
             new User(registration.getUuid(),
                 registration.getName(),
                 registration.getEmail(),
+                false,
                 false),
                 registration.getPassword()
         );

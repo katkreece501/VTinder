@@ -1,5 +1,6 @@
 package io.github.vtinder.api.controllers;
 
+import io.github.vtinder.api.models.LoginResult;
 import io.github.vtinder.api.models.User;
 import io.github.vtinder.api.repositories.VTinderRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+import static io.github.vtinder.api.security.JwtAuthConfiguration.BannedUserException;
 import static io.github.vtinder.api.security.JwtAuthConfiguration.issueJwt;
+import static io.github.vtinder.api.security.JwtAuthConfiguration.requireNotBanned;
 
 @RestController
 public class JwtController {
@@ -25,8 +28,10 @@ public class JwtController {
         this.repository = repository;
     }
 
+    // Log in; banned users with valid credentials get a 403 and no token
     @GetMapping("/auth/{email}/{password}")
-    public ResponseEntity<String> issueJwtForUser(@PathVariable String email, @PathVariable String password) {
+    public ResponseEntity<LoginResult> issueJwtForUser(@PathVariable String email, @PathVariable String password)
+            throws BannedUserException {
         Optional<User> user = repository.findUserByEmail(email);
         // Unknown users get the same 401 as a wrong password
         boolean authenticated = user
@@ -36,12 +41,13 @@ public class JwtController {
 
         if (!authenticated) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         String userUUID = user.get().getUuid();
+        requireNotBanned(userUUID);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + issueJwt(userUUID));
 
         // The app needs the uuid to know who just logged in
-        return ResponseEntity.ok().headers(headers).body(userUUID);
+        return ResponseEntity.ok().headers(headers).body(new LoginResult(userUUID, user.get().getIsModerator()));
     }
 
 }

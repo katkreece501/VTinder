@@ -3,7 +3,10 @@ CREATE TABLE IF NOT EXISTS users (
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    is_moderator INTEGER NOT NULL CHECK (is_moderator IN (0, 1)) -- sqlite boolean
+    is_moderator INTEGER NOT NULL CHECK (is_moderator IN (0, 1)), -- sqlite boolean
+    banned INTEGER NOT NULL CHECK (banned IN (0, 1)), -- sqlite boolean
+
+    CHECK (NOT (banned = 1 AND is_moderator = 1)) -- moderators cannot be banned
 );
 
 CREATE TABLE IF NOT EXISTS profiles (
@@ -50,3 +53,14 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages (sender_uuid, receiver_uuid, id);
+
+CREATE TABLE IF NOT EXISTS reports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reporter_uuid TEXT NOT NULL,
+    reported_uuid TEXT NOT NULL,
+    timestamp INTEGER NOT NULL, -- store in unix epoch format
+    reason TEXT NOT NULL,
+
+    FOREIGN KEY (reporter_uuid) REFERENCES users (uuid),
+    FOREIGN KEY (reported_uuid) REFERENCES users (uuid)
+);

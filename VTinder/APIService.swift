@@ -214,13 +214,19 @@ class APIService {
         var request = URLRequest(url: url)
         request.timeoutInterval = 10
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse,
-              200..<300 ~= httpResponse.statusCode else {
-            throw URLError(.userAuthenticationRequired)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        // The server answers 403 when the credentials are right but the account is banned
+        if httpResponse.statusCode == 403 {
+            throw LoginError.banned
+        }
+        guard 200..<300 ~= httpResponse.statusCode else {
+            throw LoginError.invalidCredentials
         }
         storeToken(from: httpResponse)
 
-        return String(data: data, encoding: .utf8) ?? ""
+        return try JSONDecoder().decode(LoginResult.self, from: data).uuid
     }
 
     // Create a new account; the user is logged in right after
@@ -262,6 +268,16 @@ struct Like: Codable {
 struct Dislike: Codable {
     let disliker: String
     let disliked: String
+}
+
+struct LoginResult: Codable {
+    let uuid: String
+    let isModerator: Bool
+}
+
+enum LoginError: Error {
+    case invalidCredentials
+    case banned
 }
 
 struct Registration: Codable {

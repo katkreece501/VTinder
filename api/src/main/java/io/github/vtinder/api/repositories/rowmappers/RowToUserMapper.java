@@ -14,7 +14,8 @@ public class RowToUserMapper implements RowMapper<User> {
             rs.getString("uuid"),
             rs.getString("name"),
             rs.getString("email"),
-            rs.getInt("is_moderator") == 1
+            rs.getInt("is_moderator") == 1,
+            rs.getInt("banned") == 1
         );
     }
 }

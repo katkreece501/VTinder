@@ -13,5 +13,6 @@ public class User {
     private String name;
     private String email;
     private Boolean isModerator;
+    private Boolean banned;
 
 }

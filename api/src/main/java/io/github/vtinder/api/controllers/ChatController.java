@@ -12,7 +12,9 @@ import java.util.List;
 import static io.github.vtinder.api.repositories.VTinderRepository.NotMatchedException;
 import static io.github.vtinder.api.security.JwtAuthConfiguration.InvalidJwtException;
 import static io.github.vtinder.api.security.JwtAuthConfiguration.verifyIdentity;
+import static io.github.vtinder.api.services.AccountService.NoSuchEntityException;
 import static io.github.vtinder.api.services.ChatService.InvalidMessageException;
+import static io.github.vtinder.api.services.ChatService.InvalidReportException;
 
 @RestController
 public class ChatController {
@@ -50,6 +52,18 @@ public class ChatController {
             throws InvalidJwtException, NotMatchedException, InvalidMessageException {
         String senderUUID = verifyIdentity(jwt);
         chatService.sendMessage(senderUUID, receiverUUID, text);
+        return ResponseEntity.ok("Success\n");
+    }
+
+    // Report another user; the body is the reason for the report
+    @PostMapping("/reports/{uuid}")
+    public ResponseEntity<String> reportUser(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable("uuid") String reportedUUID,
+            @RequestBody String reason)
+            throws InvalidJwtException, InvalidReportException, NoSuchEntityException {
+        String reporterUUID = verifyIdentity(jwt);
+        chatService.reportUser(reporterUUID, reportedUUID, reason);
         return ResponseEntity.ok("Success\n");
     }
 

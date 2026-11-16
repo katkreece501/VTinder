@@ -8,11 +8,14 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static io.github.vtinder.api.security.JwtAuthConfiguration.InvalidJwtException;
+import static io.github.vtinder.api.security.JwtAuthConfiguration.NotModeratorException;
 import static io.github.vtinder.api.security.JwtAuthConfiguration.verifyIdentity;
+import static io.github.vtinder.api.security.JwtAuthConfiguration.verifyModerator;
 import static io.github.vtinder.api.services.AccountService.NoSuchEntityException;
 
-// TODO handle checked exceptions
 @RestController
 public class AccountController {
 
@@ -34,6 +37,14 @@ public class AccountController {
     public ResponseEntity<String> getName(@RequestHeader("Authorization") String jwt, @PathVariable String uuid) throws NoSuchEntityException, InvalidJwtException {
         verifyIdentity(jwt);
         return ResponseEntity.ok(accountService.getUser(uuid).getName());
+    }
+
+    // Moderators only: fetch every profile, including banned users and other moderators
+    @GetMapping("/profiles")
+    public ResponseEntity<List<Profile>> getAllProfiles(@RequestHeader("Authorization") String jwt)
+            throws InvalidJwtException, NotModeratorException {
+        verifyModerator(jwt);
+        return ResponseEntity.ok(accountService.getAllProfiles());
     }
 
     // Fetch specific profile

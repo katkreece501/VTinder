@@ -72,6 +72,12 @@ struct LoginView: View {
         let uuid: String
         do {
             uuid = try await apiService.login(email: email, password: password)
+        } catch LoginError.banned {
+            errorMessage = "This account has been banned."
+            return
+        } catch LoginError.invalidCredentials {
+            errorMessage = "Couldn't log in. Check your email and password."
+            return
         } catch let error as URLError {
             if error.code == .cannotConnectToHost {
                 errorMessage = "The API is not running right now. Please try again later."
