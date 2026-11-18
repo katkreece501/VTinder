@@ -4,13 +4,21 @@
 //  Created by Kathleen Reece on 9/21/26.
 //
 
+/*
+ Holds the Profile struct to store user profile data.
+ */
+
 import SwiftUI
 import Foundation
 import UIKit
 
+/*
+ Holds the profile data of a user. Note that while several of these fields correspond to enums,
+ they are stored as Strings for ease on the backend API.
+ */
 struct Profile: Codable {
     let name:String // Name of the user
-    let uuid: String
+    let uuid: String // Unique ID of the user
     var year:String // Year in school; chosen from a drop down
     var bio:String // Whatever the user wants to put about themself
     var major:String // User's primary major; chosen from a drop down
@@ -18,10 +26,13 @@ struct Profile: Codable {
     var gradDate:String // User's projected graduation date; chosen from drop down
     var nextSteps:String // What the user wants to do after college; chosen from drop down
     var age:Int // Age of the user
-    var heightInches:Int // User's height
+    var heightInches:Int // User's height in inches
     var gender:String // Gender of the user; chosen from a drop down
     var image: Data? // Data of the image to be displayed on the user profile
     
+    /*
+     Creates a new Profile object.
+     */
     init(name: String, uuid: String, year: String, bio: String, major: String, interests: String, gradDate: String, nextSteps: String, age: Int, heightInches: Int, gender: String, image: Data? = nil) {
         self.name = name
         self.uuid = uuid
@@ -37,56 +48,21 @@ struct Profile: Codable {
         self.image = image
     }
     
-    func stringToEnumYear() -> SchoolYear {
-        return SchoolYear(rawValue: self.year) ?? .freshman
-    }
-    
-    func stringToEnumMajor() -> Major {
-        return Major(rawValue: self.major) ?? .accounting
-    }
-    
-    func stringToEnumGradDate() -> GradDate {
-        return GradDate(rawValue: self.gradDate) ?? .fall26
-    }
-    
-    func stringToEnumNextSteps() -> NextSteps {
-        return NextSteps(rawValue: self.nextSteps) ?? .gradSchool
-    }
-    
-    func stringToEnumGender() -> Gender {
-        return Gender(rawValue: self.gender) ?? .female
-    }
-    
+    /*
+     Gets the feet part of the height.
+     Example: If heightInches = 63, this function returns 5, as 63 inches is equivalent to 5 ft and 3 in.
+     */
     func heightFeetPart() -> Int {
         return heightInches / 12
     }
     
+    /*
+     Gets the inches part of the height.
+     Example: If heightInches = 63, this function returns 3, as 63 inches is equivalent to 5 feet and 3 inches.
+     */
     func heightInchesPart() -> Int {
         return heightInches % 12
     }
     
     
 }
-
-struct ProfilesResponse: Codable {
-    let results: [Profile]
-}
-
-/*
-extension Profile {
-    static var sample1: Profile {
-        Profile(name: "Kathleen",
-                year: "Senior",
-                bio: "Hi, I'm Kathleen! I'm looking for a long-term boyfriend who likes quiet nights in and is heading to the DC area after graduation. Knowing what you want out of life is a huge plus!",
-                major: "Computational Modeling and Data Analytics (CMDA)",
-                interests: "Reading, Running, TV, Movies, Music, Spending Time with Family",
-                gradDate: "Fall 2026",
-                nextSteps: "Working",
-                age: 21,
-                heightFeet: 5,
-                heightInches: 3,
-                gender: "Female",
-                imageData: UIImage(named: "SampleProfileImage1")?.jpegData(compressionQuality: 0.8))
-    }
-}
-*/
