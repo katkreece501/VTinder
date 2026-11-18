@@ -64,5 +64,40 @@ struct Profile: Codable {
         return heightInches % 12
     }
     
+    /*
+     Converts the String form of the year in school to the corresponding enum case.
+     */
+    func stringToEnumYear() -> SchoolYear {
+            return SchoolYear(rawValue: self.year) ?? .freshman
+    }
+    
+    /*
+     Converts the String form of the major to the corresponding enum case.
+     */
+    func stringToEnumMajor() -> Major {
+        return Major(rawValue: self.major) ?? .accounting
+    }
+    
+    /*
+     Converts the String form of the graduation year to the corresponding enum case.
+     */
+    func stringToEnumGradDate() -> GradDate {
+        return GradDate(rawValue: self.gradDate) ?? .fall26
+    }
+    
+    /*
+     Converts the String form of the planned next steps after graduation to the corresponding enum case.
+     */
+    func stringToEnumNextSteps() -> NextSteps {
+        return NextSteps(rawValue: self.nextSteps) ?? .gradSchool
+    }
+    
+    /*
+     Converts the String form of gender to the corresponding enum case.
+     */
+    func stringToEnumGender() -> Gender {
+        return Gender(rawValue: self.gender) ?? .female
+    }
+    
     
 }
