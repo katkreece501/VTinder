@@ -74,10 +74,11 @@ struct RegistrationView: View {
     // Creates the account then sends the new user off to the profile editor
     private func createAccount() async {
         let uuid: String = UUID().uuidString.lowercased()
-
-        // Registers the user
         do {
             try await apiService.register(uuid: uuid, name: name, email: email, password: password)
+        } catch let error as URLError where error.code == .cannotConnectToHost {
+            errorMessage = "Couldn't reach the server. Please check your connection or try again in a moment."
+            return
         } catch {
             errorMessage = "Couldn't create your account. That email may already be in use."
             return
