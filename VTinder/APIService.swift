@@ -8,7 +8,10 @@
 import SwiftUI
 import Foundation
 
-
+/*
+ Holds all the methods that communicate with the API. This is a Functional paradigm. Although it is stored in a
+ class, its focus is more on storing a bunch of functions then being a meaningful object.
+ */
 class APIService {
     private static var jwt: String? // Set once the user logs in
     
@@ -38,6 +41,9 @@ class APIService {
         return profile
     }
     
+    /*
+     Fetches a single user by their ID.
+     */
     func fetchUser(userID: String) async throws -> User {
         // Step 1: create URL
         let url = URL(string: "http://localhost:8080/accounts/\(userID)")!
@@ -55,21 +61,9 @@ class APIService {
         return user
     }
     
-    // Fetch just the name of any user (used to label profiles in the swiper)
-    func fetchName(userID: String) async throws -> String {
-        let url = URL(string: "http://localhost:8080/names/\(userID)")!
-        var request = URLRequest(url: url)
-        authorize(&request)
-        let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              200..<300 ~= httpResponse.statusCode else {
-            throw URLError(.badServerResponse)
-        }
-
-        return String(data: data, encoding: .utf8) ?? ""
-    }
-
+    /*
+     Fetches all profiles that a specified user has not already swiped on. Also filters out the user's own profile.
+     */
     func fetchProfiles(userID: String) async throws -> [Profile] {
         let url = URL(string: "http://localhost:8080/feed/\(userID)")!
         // Step 2: make request
@@ -85,6 +79,11 @@ class APIService {
         return profiles
     }
     
+    /*
+     Fetches all the profiles of the Daters that the user has matched with
+     (i.e., the user has liked the Dater and the Dater has liked the user).
+     Uses authentication token instead of passing in a single ID.
+     */
     func fetchMatches() async throws -> [Profile] {
         let url = URL(string: "http://localhost:8080/chat")!
         var request = URLRequest(url: url)
@@ -154,9 +153,13 @@ class APIService {
             throw URLError(URLError.Code.badServerResponse)
         }
     }
-
+    
+    /*
+     Sends a like or a dislike to the API, using a Boolean parameter to tell if its a like or dislike.
+     */
     func sendLikeOrDislike(swiperID: String, swipeeID: String, isLike: Bool) async throws {
         let url: URL
+        // Different URL based on whether this is a like or dislike
         if isLike {
             url = URL(string: "http://localhost:8080/feed/like/\(swiperID)/\(swipeeID)")!
         }
@@ -166,6 +169,7 @@ class APIService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        // Different encoding based on whether this is a like or dislike
         if isLike {
             request.httpBody = try JSONEncoder().encode(Like(liker: swiperID, liked: swipeeID))
         }
@@ -184,32 +188,35 @@ class APIService {
         }
     }
     
+    /*
+     Rewrites profile data after an edit.
+     */
     func updateProfile(profile: Profile) async throws {
-            let url = URL(
-                string: "http://localhost:8080/profiles"
-            )!
+        let url = URL(
+            string: "http://localhost:8080/profiles"
+        )!
 
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
-            request.setValue(
-                "application/json",
-                forHTTPHeaderField: "Content-Type"
-            )
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
 
-            request.httpBody = try JSONEncoder().encode(profile)
-        
+        request.httpBody = try JSONEncoder().encode(profile)
+    
         authorize(&request)
         let (data, response) = try await URLSession.shared.data(for: request)
 
-            if let httpResponse = response as? HTTPURLResponse {
-                print("Status code:", httpResponse.statusCode)
-                print("Response:", String(data: data, encoding: .utf8) ?? "No response body")
+        if let httpResponse = response as? HTTPURLResponse {
+            print("Status code:", httpResponse.statusCode)
+            print("Response:", String(data: data, encoding: .utf8) ?? "No response body")
 
-                guard 200..<300 ~= httpResponse.statusCode else {
-                    throw URLError(.badServerResponse)
-                }
+            guard 200..<300 ~= httpResponse.statusCode else {
+                throw URLError(.badServerResponse)
             }
         }
+    }
 
     /*
      Sends a report about another user to the API.
@@ -374,11 +381,21 @@ class APIService {
     }
 }
 
+/*
+ Below are various objects used to code data and errors. They are all examples of the Object-Orientated paradigm.
+ */
+
+/*
+ What data is sent when a user likes another profile.
+ */
 struct Like: Codable {
     let liker: String
     let liked: String
 }
 
+/*
+ What data is sent when a user dislikes another profile.
+ */
 struct Dislike: Codable {
     let disliker: String
     let disliked: String
@@ -386,7 +403,6 @@ struct Dislike: Codable {
 
 /*
  Holds what the API sends back when a user logs in.
- This is an example of an Object-oriented paradigm.
  */
 struct LoginResult: Codable {
     let uuid: String // The unique ID of the user
@@ -401,6 +417,9 @@ enum LoginError: Error {
     case banned // The email and password are right, but the user has been banned
 }
 
+/*
+ What data is sent when a new user registers.
+ */
 struct Registration: Codable {
     let uuid: String
     let name: String

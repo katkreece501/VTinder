@@ -1,5 +1,9 @@
 import SwiftUI
 
+/*
+ Holds the view that allows users to chat with other users within VTinder. This is primarily an example of the Object-Orientated paradigm.
+ */
+
 // Shows the chat with one match and lets the user send messages
 struct ChatView: View {
     let profile: Profile
