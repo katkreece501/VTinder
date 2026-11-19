@@ -65,7 +65,7 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    .navigationTitle("My Profile")
+                    .navigationTitle(shown.uuid == currUserID ? "My Profile" : shown.name) // Title is "My Profile" for your own profile, otherwise the user's name
             }
             .task {
                 // Only your own profile can change while you're looking at it

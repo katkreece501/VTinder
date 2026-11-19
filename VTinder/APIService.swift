@@ -12,7 +12,10 @@ import Foundation
 class APIService {
     private static var jwt: String? // Set once the user logs in
     
-    // Fetch a single profile by user ID
+    /*
+     Fetch a single profile by user ID.
+     Note that Moderators can also see the profiles of banned users, but Daters can't.
+     */
     func fetchProfile(userID: String) async throws -> Profile {
         // Step 1: create URL
         let url = URL(string: "http://localhost:8080/profiles/\(userID)")!
@@ -208,8 +211,119 @@ class APIService {
             }
         }
 
-    // Log in with email and password; returns the user's ID
-    func login(email: String, password: String) async throws -> String {
+    /*
+     Sends a report about another user to the API.
+     Note that we don't send who is reporting; the backend figures that out from the user's login.
+     */
+    func reportUser(uuid: String, reason: String) async throws {
+        let url: URL = URL(string: "http://localhost:8080/reports/\(uuid)")!
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "POST"
+        // timeout after 15 seconds
+        request.timeoutInterval = 15
+        // The server takes the reason as plain text, not JSON
+        request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
+        request.httpBody = Data(reason.utf8)
+        authorize(&request)
+
+        let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
+        let response: URLResponse = result.1
+
+        guard let http: HTTPURLResponse = response as? HTTPURLResponse else {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+        if http.statusCode < 200 || http.statusCode > 299 {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+    }
+
+    /*
+     Gets the profile of every user of the app. Only Moderators are allowed to do this.
+     */
+    func fetchAllProfiles() async throws -> [Profile] {
+        let url = URL(string: "http://localhost:8080/profiles")!
+        var request = URLRequest(url: url)
+        authorize(&request)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        let profiles = try JSONDecoder().decode([Profile].self, from: data)
+
+        return profiles
+    }
+
+    /*
+     Gets every report sent in by Daters, from newest to oldest. Only Moderators are allowed to do this.
+     */
+    func fetchReports() async throws -> [ReportRecord] {
+        let url = URL(string: "http://localhost:8080/reports")!
+        var request = URLRequest(url: url)
+        authorize(&request)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        // The API sends dates in a format like 2026-11-16T06:52:06Z, so we have to tell the decoder how to read them
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let reports = try decoder.decode([ReportRecord].self, from: data)
+
+        return reports
+    }
+
+    /*
+     Deletes a report once it's been dealt with. Only Moderators are allowed to do this.
+     */
+    func deleteReport(id: Int) async throws {
+        let url: URL = URL(string: "http://localhost:8080/reports/\(id)")!
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        // timeout after 15 seconds
+        request.timeoutInterval = 15
+        authorize(&request)
+
+        let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
+        let response: URLResponse = result.1
+
+        guard let http: HTTPURLResponse = response as? HTTPURLResponse else {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+        if http.statusCode < 200 || http.statusCode > 299 {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+    }
+
+    /*
+     Bans a user. Only Moderators are allowed to do this.
+     Note that the backend refuses to ban other Moderators.
+     */
+    func banUser(uuid: String) async throws {
+        let url: URL = URL(string: "http://localhost:8080/ban/\(uuid)")!
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "POST"
+        // timeout after 15 seconds
+        request.timeoutInterval = 15
+        authorize(&request)
+
+        let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
+        let response: URLResponse = result.1
+
+        guard let http: HTTPURLResponse = response as? HTTPURLResponse else {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+        if http.statusCode < 200 || http.statusCode > 299 {
+            throw URLError(URLError.Code.badServerResponse)
+        }
+    }
+
+    /*
+     Logs in with an email and password.
+     Returns the user's ID and whether they're a Moderator, which decides which home screen they see.
+     */
+    func login(email: String, password: String) async throws -> LoginResult {
         let url = URL(string: "http://localhost:8080/auth/\(email)/\(password)")!
         var request = URLRequest(url: url)
         request.timeoutInterval = 10
@@ -217,7 +331,7 @@ class APIService {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
-        // The server answers 403 when the credentials are right but the account is banned
+        // The API sends back a 403 when the email and password are right but the user has been banned
         if httpResponse.statusCode == 403 {
             throw LoginError.banned
         }
@@ -226,7 +340,7 @@ class APIService {
         }
         storeToken(from: httpResponse)
 
-        return try JSONDecoder().decode(LoginResult.self, from: data).uuid
+        return try JSONDecoder().decode(LoginResult.self, from: data)
     }
 
     // Create a new account; the user is logged in right after
@@ -270,14 +384,21 @@ struct Dislike: Codable {
     let disliked: String
 }
 
+/*
+ Holds what the API sends back when a user logs in.
+ This is an example of an Object-oriented paradigm.
+ */
 struct LoginResult: Codable {
-    let uuid: String
-    let isModerator: Bool
+    let uuid: String // The unique ID of the user
+    let isModerator: Bool // Whether the user is a Moderator or a Dater
 }
 
+/*
+ The different reasons a login can fail, so the login screen can show the right message.
+ */
 enum LoginError: Error {
-    case invalidCredentials
-    case banned
+    case invalidCredentials // The email or password is wrong
+    case banned // The email and password are right, but the user has been banned
 }
 
 struct Registration: Codable {

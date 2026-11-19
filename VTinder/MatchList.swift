@@ -68,13 +68,28 @@ struct MatchList: View {
 struct MatchRow: View {
     var profile: Profile
     var currentUserID: String
+    @State private var showReportForm = false // Whether we're showing the report form or not
 
     var body: some View {
-        // Tapping a match opens the chat with them
-        NavigationLink(destination: { () -> ChatView in
-            return ChatView(profile: profile, currentUserID: currentUserID)
-        }, label: { () -> Text in
-            return Text(profile.name)
-        })
+        HStack {
+            // Tapping a match opens the chat with them
+            NavigationLink(destination: { () -> ChatView in
+                return ChatView(profile: profile, currentUserID: currentUserID)
+            }, label: { () -> Text in
+                return Text(profile.name)
+            })
+            // Button to report this match
+            // The borderless style keeps a tap on the flag from also opening the chat
+            Button {
+                showReportForm = true
+            } label: {
+                Image(systemName: "flag")
+            }
+            .buttonStyle(BorderlessButtonStyle())
+        }
+        // Pops up the report form when the flag is clicked
+        .sheet(isPresented: $showReportForm) {
+            ChatReportForm(reportedProfile: profile)
+        }
     }
 }

@@ -73,7 +73,6 @@ public class JwtAuthConfiguration {
         public InvalidJwtException(String msg) {super(msg);}
     }
 
-    // A banned user's token is no longer valid, so existing "throws InvalidJwtException" clauses cover this
     public static class BannedUserException extends InvalidJwtException {
         public BannedUserException(String msg) {super(msg);}
     }

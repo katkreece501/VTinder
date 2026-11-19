@@ -24,7 +24,6 @@ public class ModeratorController {
         this.moderatorService = moderatorService;
     }
 
-    // Fetch every report, newest first
     @GetMapping("/reports")
     public ResponseEntity<List<Report>> getReports(@RequestHeader("Authorization") String jwt)
             throws InvalidJwtException, NotModeratorException {
@@ -32,7 +31,6 @@ public class ModeratorController {
         return ResponseEntity.ok(moderatorService.getReports());
     }
 
-    // Delete a report once it's been dealt with
     @DeleteMapping("/reports/{id}")
     public ResponseEntity<String> deleteReport(@RequestHeader("Authorization") String jwt, @PathVariable("id") long id)
             throws InvalidJwtException, NotModeratorException, NoSuchEntityException {
@@ -41,7 +39,6 @@ public class ModeratorController {
         return ResponseEntity.ok("Success\n");
     }
 
-    // Ban a user; moderators can't be banned
     @PostMapping("/ban/{uuid}")
     public ResponseEntity<String> banUser(@RequestHeader("Authorization") String jwt, @PathVariable("uuid") String bannedUUID)
             throws InvalidJwtException, NotModeratorException, NoSuchEntityException, CannotBanModeratorException {

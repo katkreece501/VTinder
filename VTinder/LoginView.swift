@@ -2,7 +2,7 @@ import SwiftUI
 
 // the login screen
 struct LoginView: View {
-    let onLoggedIn: (String) -> Void
+    let onLoggedIn: (String, Bool) -> Void // Passed in as a parameter. Given the user's ID and whether they're a Moderator
     let onRegistered: (Profile, String) -> Void
     @State private var email: String = ""
     @State private var password: String = ""
@@ -69,13 +69,13 @@ struct LoginView: View {
 
     // Checks the email and password with the server and goes to the home page if they're right
     private func logIn() async {
-        let uuid: String
+        let result: LoginResult
         do {
-            uuid = try await apiService.login(email: email, password: password)
-        } catch LoginError.banned {
+            result = try await apiService.login(email: email, password: password)
+        } catch LoginError.banned { // If the user has been banned
             errorMessage = "This account has been banned."
             return
-        } catch LoginError.invalidCredentials {
+        } catch LoginError.invalidCredentials { // If the email or password is wrong
             errorMessage = "Couldn't log in. Check your email and password."
             return
         } catch let error as URLError {
@@ -92,12 +92,12 @@ struct LoginView: View {
         }
 
         errorMessage = ""
-        onLoggedIn(uuid)
+        onLoggedIn(result.uuid, result.isModerator)
     }
 }
 
 #Preview {
-    LoginView(onLoggedIn: { (uuid: String) in
+    LoginView(onLoggedIn: { (uuid: String, isModerator: Bool) in
     }, onRegistered: { (profile: Profile, name: String) in
     })
 }

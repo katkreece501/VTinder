@@ -22,7 +22,8 @@ public class AccountService {
 
     public void registerUser(Registration registration) throws RegistrationFailedException {
         // Hashes password before inserting
-        registration.setPassword(BCrypt.hashpw(registration.getPassword(), BCrypt.gensalt()));
+        String password = BCrypt.hashpw(registration.getPassword(), BCrypt.gensalt());
+        registration.setPassword(password);
         int rowsEdited = repository.registerUser(
             new User(registration.getUuid(),
                 registration.getName(),

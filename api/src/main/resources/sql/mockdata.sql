@@ -13,8 +13,8 @@ INSERT INTO users (uuid, name, email, password, is_moderator, banned) VALUES
     ('88888888-8888-4888-8888-888888888888', 'Hunter Brooks',     'hunter.brooks@vt.edu',     '$2b$12$Ju0e4Fy2sYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWh', 0, 0),
     ('99999999-9999-4999-8999-999999999999', 'Isabella Ferraro',  'isabella.ferraro@vt.edu',  '$2b$12$Mv1f7Gz9tYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWi', 0, 0),
     ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Jack Sullivan',     'jack.sullivan@vt.edu',     '$2b$12$Nw2g0Hz1uYV1z0m6h1LmE.7xVYQKq2G8p1c3aRr9dQvJmN2sT6uWj', 0, 0),
-    -- moderator with a real hash, password is ModeratorPass1
-    ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'VTinder Moderator', 'moderator@vt.edu',         '$2a$10$5yWuj/VWr4h2PzHwRqY/TeO1aF93rQjTlF4tEw30ChkfTwBNnqquu', 1, 0);
+    -- moderator with a real hash, password is 4YamzxkGsVlLxU
+    ('cccccccc-cccc-4ccc-8ccc-cccccccccccc', 'VTinder Moderator 2', 'moderator2@vt.edu',      '$2a$10$LymF67dRF7K3knuQCALl4uuHdz.RXWtiZSxd5ofw0zZ1Rzp06Youy', 1, 0);
 
 -- ------------------------------------------------------------
 -- profiles
@@ -32,7 +32,8 @@ INSERT INTO profiles (user_uuid, school_year, bio, major, interests, grad_date, 
      ('88888888-8888-4888-8888-888888888888', 'Junior', 'Civil engineering senior, avid trail runner.', 'Civil Engineering', 'Running, kayaking, craft beer',            'Fall 2026', 'Other', 23, 70, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
      ('99999999-9999-4999-8999-999999999999', 'Senior', 'Marketing major who runs a small Etsy shop on the side.', 'Marketing', 'Crafting, social media, dogs',             'Spring 2027', 'Working',    21, 66, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
      ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Sophomore', 'Electrical engineering student who builds synths as a hobby.', 'Electrical Engineering', 'Synths, music production, chess',    'Fall 2027', 'Military', 20, 72, 'Male', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '', '', '', '', '', '', NULL, NULL, '', NULL);
+     ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '', '', '', '', '', '', NULL, NULL, '', NULL),
+     ('cccccccc-cccc-4ccc-8ccc-cccccccccccc', '', '', '', '', '', '', NULL, NULL, '', NULL);
 
 -- ------------------------------------------------------------
 -- likes
