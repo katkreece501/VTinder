@@ -32,7 +32,6 @@ INSERT INTO profiles (user_uuid, school_year, bio, major, interests, grad_date, 
      ('88888888-8888-4888-8888-888888888888', 'Junior', 'Civil engineering senior, avid trail runner.', 'Civil Engineering', 'Running, kayaking, craft beer',            'Fall 2026', 'Other', 23, 70, 'Male',   X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
      ('99999999-9999-4999-8999-999999999999', 'Senior', 'Marketing major who runs a small Etsy shop on the side.', 'Marketing', 'Crafting, social media, dogs',             'Spring 2027', 'Working',    21, 66, 'Female', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
      ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Sophomore', 'Electrical engineering student who builds synths as a hobby.', 'Electrical Engineering', 'Synths, music production, chess',    'Fall 2027', 'Military', 20, 72, 'Male', X'89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000A4944415478DA6360000002000155A32A4E0000000049454E44AE426082'),
-     ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '', '', '', '', '', '', NULL, NULL, '', NULL),
      ('cccccccc-cccc-4ccc-8ccc-cccccccccccc', '', '', '', '', '', '', NULL, NULL, '', NULL);
 
 -- ------------------------------------------------------------
