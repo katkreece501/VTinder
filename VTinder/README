@@ -38,3 +38,5 @@ At this point, you can run the Swift files through Xcode and be able to use our 
 Known issues:
 
 When you first make a new profile and save it on an iPhone, you will move to the "My Profile" tab. However, it will not yet show the data you put in. If you switch to another tab and switch back to the "My Profile" tab, your profile will be correctly displayed.
+
+Due to time constraints, we weren't able to test being on iPhone.
