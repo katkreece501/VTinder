@@ -1,9 +1,13 @@
 import SwiftUI
 
-// Registration page
+/*
+ Registration page, where a new user can create an account.
+ In our opinion, this is mainly Object-Oriented programming, due to the use of various other SwiftUI classes.
+ However, the use of the createAccount() function to store the new user data and send them to make a new profile is an example of  a Procedural programming paradigm.
+ */
 struct RegistrationView: View {
     let onRegistered: (Profile, String) -> Void
-    @State private var name: String = ""
+    @State private var name: String = "" // This is entered at registration, like other major dating apps.
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var errorMessage: String = ""

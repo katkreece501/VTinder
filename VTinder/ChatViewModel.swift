@@ -2,6 +2,7 @@ import Foundation
 import Observation
 
 // Holds the messages for one chat; the chat screen redraws when these values change
+// This is an example of an Object-Oriented paradigm
 @MainActor
 @Observable
 class ChatViewModel {

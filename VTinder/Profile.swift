@@ -13,8 +13,8 @@ import Foundation
 import UIKit
 
 /*
- Holds the profile data of a user. Note that while several of these fields correspond to enums,
- they are stored as Strings for ease on the backend API.
+ Holds the profile data of a user. Note that while several of these fields correspond to enums, they are stored as Strings for the API.
+ This is an example of an Object-Oriented paradigm.
  */
 struct Profile: Codable {
     let name:String // Name of the user

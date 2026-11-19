@@ -1,6 +1,10 @@
 Running This Project:
 
-Due to our use of a custom API, you will need to start the server before running our project for it to work correctly. Running the server requires JDK 21, an internet connection, and all of our project files to exist on your machine. Assuming you have both of these things, follow the steps below to start the server.
+Due to our use of a custom API, you will need to start the server before running our project for it to work correctly. Running the server requires JDK 21, an internet connection, and all of our project files to exist on your machine.
+To get the project files, please clone our GitHub at: https://github.com/katkreece501/VTinder
+To get JDK 21, download the appropriate version for your machine at: https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html
+
+Once you have both of these things, follow the steps below to start the server.
 
 Open your terminal/command line.
 Navigate to the api folder within this project

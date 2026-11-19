@@ -1,6 +1,11 @@
 import SwiftUI
 
-// the login screen
+
+/*
+ What users see what they first open up the app, allowing them to input their email and password, or register as new user.
+ In our opinion, this is mainly Object-Oriented programming, due to the use of various other SwiftUI classes.
+ However, the use of the logIn() function to authenticate the user and rout them to the correct home view.
+ */
 struct LoginView: View {
     let onLoggedIn: (String, Bool) -> Void // Passed in as a parameter. Given the user's ID and whether they're a Moderator
     let onRegistered: (Profile, String) -> Void
@@ -29,7 +34,8 @@ struct LoginView: View {
                     .keyboardType(UIKeyboardType.emailAddress)
                     .textInputAutocapitalization(TextInputAutocapitalization.never)
                     .autocorrectionDisabled()
-
+                
+                // Password entry
                 SecureField("Password", text: Binding<String>(
                     get: { () -> String in
                         return password
@@ -67,7 +73,7 @@ struct LoginView: View {
         })
     }
 
-    // Checks the email and password with the server and goes to the home page if they're right
+    // Checks the email and password with the server and goes to the appropriate home page if they're right
     private func logIn() async {
         let result: LoginResult
         do {
