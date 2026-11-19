@@ -4,6 +4,11 @@
 //  Created by Kathleen Reece on 9/22/26.
 //
 
+/*
+ This file holds the enums that are used to govern various profile options
+ According to our research, Swift Enums are a type of Functional Programming because they assign custom data to seperate cases.
+ */
+
 // The possible school year options users can choose from
 enum SchoolYear:String, CaseIterable, Identifiable {
     case freshman = "Freshman"

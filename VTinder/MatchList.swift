@@ -5,14 +5,24 @@
 //  Created by Kathleen Reece on 10/26/26.
 //
 
+/*
+ Holds the MatchList view, allowing users to see and chat with their matches.
+ */
+
 import SwiftUI
 
+/*
+ Lists out each Dater the user has matched with (i.e., the Daters that have liked the user and that the user has liked back).
+ Users can click each line in the list to go and message that match.
+ In our opinion, this is mainly Object-Oriented programming, due to the heavy use of the Profile struct and various other SwiftUI classes.
+ However, the use of the loadMatches() function to get all the user's matches from the API is an example of Procedural programming.
+ */
 struct MatchList: View {
-    @State var matches: [Profile] = []
-    var currentUserID: String
+    @State var matches: [Profile] = [] // Fetched from the API
+    var currentUserID: String // Passed in as a parameter
     @State var isLoading = true
     let apiService = APIService()
-    @State private var showMatchesInfo = false
+    @State private var showMatchesInfo = false // Are we showing the instructions pop up or not.
     
     var body: some View {
         // No NavigationStack here; this screen is pushed onto the home screen's stack
@@ -38,6 +48,8 @@ struct MatchList: View {
         .task {
             await loadMatches()
         }
+        // For iPad users - their instructions button
+        // On an iPhone, this will be hidden by the bottom tabs, and their instructions button is in DaterHomeView
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
                 Button {
@@ -54,6 +66,9 @@ struct MatchList: View {
             }
         }
     }
+    /*
+     Goes to the API to get all matches for this user
+     */
     func loadMatches() async {
         do {
             matches = try await apiService.fetchMatches()
@@ -65,6 +80,10 @@ struct MatchList: View {
     }
 }
 
+/*
+ Displays the name of the matched Dater and provides a link to message them
+ Also has a flag button that lets the user report the match
+ */
 struct MatchRow: View {
     var profile: Profile
     var currentUserID: String
