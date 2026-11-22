@@ -39,4 +39,32 @@ Known issues:
 
 When you first make a new profile and save it on an iPhone, you will move to the "My Profile" tab. However, it will not yet show the data you put in. If you switch to another tab and switch back to the "My Profile" tab, your profile will be correctly displayed.
 
-Due to time constraints, we weren't able to test being on iPhone.
+Our sample profiles do not have actual profile pictures. We tried to go back and add pictures, but they didn't display in the simulator. Internally, they have blobs of nonsense data instead of images.
+
+We were not able to test our code on an actual iPhone or iPad, so it is posssible that there are additional issues not apparent in the simulators.
+
+Functional Requirements:
+Dater:
+- Make a profile for themself
+- See other Dater's profiles
+- Swipe on other Dater's profiles to indicate like/dislike
+- Send messages to Daters that they have matched with
+- Report other Daters
+
+Moderator:
+- See all the users on the app
+- Message any user on the app
+- Read Dater-submitted reports
+- Ban users
+
+Non-Functional Requirements:
+- Security: Authentication on the backend API
+- Multi-Device Functionality: Can use VTinder on an iPhone OR iPad, and have account state reflected between devices
+- Instructions: For each screen in the app, be able to view instructions on what to do on the screen with one tap within the app
+- Speed: Loads fast, even in enviorments with not-so-good WiFi (as long as the API is running)
+- Easy Start: When a new Dater makes an account, they are immediately prompted to make a profile
+
+Advanced Features:
+- Kathleen: Gesture-based swiping
+- Ethan: External Storage and Custom API
+
