@@ -78,6 +78,9 @@ struct RegistrationView: View {
         // Registers the user
         do {
             try await apiService.register(uuid: uuid, name: name, email: email, password: password)
+        } catch let error as URLError where error.code == .cannotConnectToHost {
+            errorMessage = "Couldn't reach the server. Please check your connection or try again in a moment."
+            return
         } catch {
             errorMessage = "Couldn't create your account. That email may already be in use."
             return
